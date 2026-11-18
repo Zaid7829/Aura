@@ -25,9 +25,9 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`group cursor-pointer p-4 rounded-2xl bg-aura-850/60 border border-aura-800/80 hover:border-aura-700 transition-all duration-200 tactile-card tactile-card-hover flex flex-col items-center text-center select-none ${className}`}
+      className={`group cursor-pointer p-3 sm:p-4 rounded-2xl bg-aura-850/60 border border-aura-800/80 hover:border-aura-700 transition-all duration-200 tactile-card tactile-card-hover flex flex-col items-center text-center select-none active:scale-[0.98] ${className}`}
     >
-      <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-4 border-2 border-aura-700/80 shadow-md">
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-3 sm:mb-4 border-2 border-aura-700/80 shadow-md">
         <ArtworkImage src={artworkUrl} alt={name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
           <div className="w-10 h-10 rounded-full bg-aura-accent text-white flex items-center justify-center shadow-lg">

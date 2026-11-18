@@ -42,10 +42,10 @@ export const AudioPlayer: React.FC = () => {
     <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 z-30 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck will-change-transform">
       {/* Top micro progress line for mobile */}
       <div className="md:hidden">
-        <TrackProgress showTimestamps={false} className="h-0.5 gap-0 py-0" />
+        <TrackProgress showTimestamps={false} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-20 sm:h-22 flex items-center justify-between gap-3 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-20 lg:h-22 flex items-center justify-between gap-3 sm:gap-4">
         {/* Left: Track Details & Like */}
         <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1 md:flex-initial md:w-56 lg:w-72">
           <div

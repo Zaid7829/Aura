@@ -180,7 +180,7 @@ export const SearchPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-8 sm:space-y-12">
       {/* 1. SEARCH INPUT CONTROL */}
       <div className="border-b border-aura-800/80 pb-6">
         <span className="text-xs font-mono uppercase tracking-wider text-aura-accent">

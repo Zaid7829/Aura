@@ -100,11 +100,11 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16 sm:space-y-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-10 sm:space-y-16 md:space-y-24">
       {/* 1. FEATURED RELEASE (Hero Area) */}
-      <section className="relative border-b border-aura-800/80 pb-12">
+      <section className="relative border-b border-aura-800/80 pb-8 sm:pb-12">
         {isLoading || !featuredTrack ? (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
             <div className="md:col-span-5 aspect-square rounded-3xl bg-aura-800/40 animate-pulse border border-white/5" />
             <div className="md:col-span-7 space-y-4">
               <div className="h-6 w-32 bg-aura-800/40 rounded-md animate-pulse" />
@@ -114,14 +114,20 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
             {/* Artwork Container */}
             <div className="md:col-span-5">
-              <div className="aspect-square rounded-3xl overflow-hidden shadow-aura-deck border border-white/10 relative group">
+              <div
+                onClick={() => playTrack(featuredTrack, [featuredTrack])}
+                className="aspect-square rounded-3xl overflow-hidden shadow-aura-deck border border-white/10 relative group cursor-pointer active:scale-[0.98] transition-transform"
+              >
                 <ArtworkImage src={featuredTrack.coverUrl} alt={featuredTrack.title} />
                 <button
-                  onClick={() => playTrack(featuredTrack, [featuredTrack])}
-                  className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 pointer-events-none sm:pointer-events-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    playTrack(featuredTrack, [featuredTrack]);
+                  }}
+                  className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300"
                   aria-label="Play Featured Track"
                 >
                   <div className="w-16 h-16 rounded-full bg-aura-accent text-white flex items-center justify-center shadow-lg transform scale-95 group-hover:scale-100 transition-transform duration-300">
@@ -193,12 +199,12 @@ export const HomePage: React.FC = () => {
             actionText="View Complete Archive"
             onAction={() => navigate('/recent')}
           />
-          <div className="flex gap-6 overflow-x-auto no-scrollbar pb-3">
+          <div className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-3 snap-x snap-mandatory">
             {recentlyPlayed.slice(0, 6).map((track) => (
               <div
                 key={track.id}
                 onClick={() => playTrack(track, recentlyPlayed)}
-                className="w-36 shrink-0 cursor-pointer group select-none"
+                className="w-32 sm:w-36 shrink-0 cursor-pointer group select-none snap-start active:scale-[0.98] transition-transform"
               >
                 <div className="aspect-square rounded-xl overflow-hidden mb-2.5 border border-white/5 relative">
                   <ArtworkImage src={track.coverUrl} alt={track.title} />
@@ -278,7 +284,7 @@ export const HomePage: React.FC = () => {
           subtitle="The independent musicians shaping contemporary minimalist soundscapes."
         />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3.5 sm:gap-6">
           {MOCK_ARTISTS.map((artist) => (
             <ArtistCard
               key={artist.id}

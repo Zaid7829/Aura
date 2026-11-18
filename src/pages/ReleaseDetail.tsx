@@ -100,7 +100,7 @@ export const ReleaseDetail: React.FC = () => {
   const albumId = album.id || '';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-8 sm:space-y-12">
       <div>
         <button
           onClick={() => navigate(-1)}
@@ -111,9 +111,9 @@ export const ReleaseDetail: React.FC = () => {
         </button>
       </div>
 
-      <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pb-12 border-b border-aura-800/80">
-        <div className="md:col-span-5 lg:col-span-4">
-          <div className="relative aspect-square rounded-3xl overflow-hidden shadow-aura-deck border border-white/10">
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start pb-8 sm:pb-12 border-b border-aura-800/80">
+        <div className="md:col-span-5 lg:col-span-4 max-w-[260px] sm:max-w-xs md:max-w-none mx-auto md:mx-0 w-full">
+          <div className="relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden shadow-aura-deck border border-white/10">
             <ArtworkImage src={album.coverUrl} alt={album.title} />
           </div>
         </div>

@@ -72,6 +72,46 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
     setIsDragging(false);
   };
 
+  // Compact micro progress bar (used atop the mobile mini player)
+  if (!showTimestamps) {
+    if (isLiveStream) {
+      return (
+        <div className={`w-full h-1 bg-aura-800/80 overflow-hidden relative select-none ${className}`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-aura-accent to-red-500 animate-pulse" />
+        </div>
+      );
+    }
+
+    return (
+      <div
+        ref={barRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        role="slider"
+        aria-label="Track playback seeker"
+        aria-valuemin={0}
+        aria-valuemax={Math.round(duration)}
+        aria-valuenow={Math.round(currentTime)}
+        tabIndex={0}
+        className={`w-full h-1 sm:h-1.5 bg-aura-850 relative cursor-pointer touch-none select-none overflow-hidden ${className}`}
+      >
+        <div
+          style={{ width: `${bufferedPercent}%` }}
+          className="absolute left-0 top-0 bottom-0 bg-aura-700/40"
+        />
+        <div
+          style={{ width: `${progressPercent}%` }}
+          className="absolute left-0 top-0 bottom-0 bg-aura-accent"
+        />
+      </div>
+    );
+  }
+
   if (isLiveStream) {
     return (
       <div className={`flex items-center justify-between gap-3 w-full select-none py-1 ${className}`}>

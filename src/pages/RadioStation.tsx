@@ -91,8 +91,8 @@ export const RadioStation: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        <div className="lg:col-span-7 bg-aura-850 border border-aura-700/80 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-aura-deck tactile-card">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+        <div className="lg:col-span-7 bg-aura-850 border border-aura-700/80 rounded-3xl p-4 sm:p-8 flex flex-col justify-between shadow-aura-deck tactile-card">
           <div className="flex items-center justify-between border-b border-aura-800 pb-4">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-aura-accent" />
@@ -103,10 +103,10 @@ export const RadioStation: React.FC = () => {
             <Badge variant="accent">{selectedStation.mood}</Badge>
           </div>
 
-          <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
-            <div className="relative w-40 h-40 rounded-full bg-aura-950 border-2 border-aura-700/80 shadow-2xl flex items-center justify-center overflow-hidden">
+          <div className="py-8 sm:py-12 flex flex-col items-center justify-center text-center space-y-5 sm:space-y-6">
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-aura-950 border-2 border-aura-700/80 shadow-2xl flex items-center justify-center overflow-hidden">
               <Disc3
-                className={`w-28 h-28 text-aura-accent/80 ${
+                className={`w-20 h-20 sm:w-28 sm:h-28 text-aura-accent/80 ${
                   isCurrentStationPlaying ? 'animate-spin-slow' : 'opacity-40'
                 }`}
               />
@@ -118,19 +118,19 @@ export const RadioStation: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="font-serif text-2xl sm:text-3xl text-aura-100 font-medium">
+              <h3 className="font-serif text-xl sm:text-3xl text-aura-100 font-medium">
                 {selectedStation.name}
               </h3>
-              <p className="text-sm text-aura-300 font-sans mt-1 max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-aura-300 font-sans mt-1 max-w-md mx-auto">
                 {selectedStation.tagline}
               </p>
             </div>
 
-            <div className="w-full max-w-sm bg-aura-950 p-4 rounded-2xl border border-aura-800">
+            <div className="w-full max-w-sm bg-aura-950 p-3 sm:p-4 rounded-2xl border border-aura-800">
               <VisualizerCanvas
                 mode="wave"
-                height={48}
-                width={320}
+                height={40}
+                width={280}
                 barColor="#e07a5f"
                 className="w-full"
               />
@@ -156,7 +156,7 @@ export const RadioStation: React.FC = () => {
                 <div
                   key={station.id}
                   onClick={() => handleTuneIn(station)}
-                  className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 border flex items-center gap-4 ${
+                  className={`p-3.5 sm:p-4 rounded-2xl cursor-pointer transition-all duration-200 border flex items-center gap-3.5 sm:gap-4 select-none active:scale-[0.98] ${
                     isSelected
                       ? 'bg-aura-800/90 border-aura-accent/40 shadow-sm'
                       : 'bg-aura-850/60 border-aura-800/80 hover:bg-aura-800/60 hover:border-aura-700'

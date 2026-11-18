@@ -24,7 +24,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, onClick, className 
   return (
     <div
       onClick={onClick}
-      className={`group cursor-pointer rounded-2xl p-4 bg-aura-850/60 border border-aura-800/80 hover:border-aura-700 transition-all duration-200 tactile-card tactile-card-hover flex flex-col justify-between select-none ${className}`}
+      className={`group cursor-pointer rounded-2xl p-3.5 sm:p-4 bg-aura-850/60 border border-aura-800/80 hover:border-aura-700 transition-all duration-200 tactile-card tactile-card-hover flex flex-col justify-between select-none active:scale-[0.98] ${className}`}
     >
       <div>
         <div className="relative aspect-square rounded-xl overflow-hidden mb-3 border border-white/5">

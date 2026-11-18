@@ -133,17 +133,31 @@ export const ExpandedPlayerModal: React.FC = () => {
             initial={{ opacity: 0, scale: 0.98, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 30 }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 100) {
+                setIsVisualizerExpanded(false);
+              }
+            }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full h-full md:h-auto md:max-h-[92vh] md:max-w-4xl bg-aura-900 border-0 md:border md:border-aura-800 md:rounded-3xl shadow-aura-deck flex flex-col overflow-hidden z-10 will-change-transform"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-aura-800/80 bg-aura-950/80 pt-safe-top">
-              <div className="flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-aura-accent" />
-                <span className="font-mono text-[10px] uppercase tracking-widest text-aura-400">
-                  Tactile Audio Deck
-                </span>
+            <div className="flex flex-col border-b border-aura-800/80 bg-aura-950/80 pt-safe-top">
+              {/* Mobile grab pill handle */}
+              <div className="sm:hidden pt-2 pb-1 flex justify-center cursor-grab active:cursor-grabbing">
+                <div className="w-10 h-1 rounded-full bg-aura-700/60" />
               </div>
+
+              <div className="flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-4">
+                <div className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-aura-accent" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-aura-400">
+                    Tactile Audio Deck
+                  </span>
+                </div>
 
               {/* Tabs (Desktop) */}
               <div className="hidden sm:flex items-center gap-1 bg-aura-900 p-1 rounded-lg border border-aura-800">
@@ -224,6 +238,7 @@ export const ExpandedPlayerModal: React.FC = () => {
                 </TactileButton>
               </div>
             </div>
+            </div>
 
             {/* Tabs (Mobile Navigation) */}
             <div className="flex sm:hidden border-b border-aura-800 bg-aura-900/80 px-4 py-2 gap-1 overflow-x-auto no-scrollbar">
@@ -261,8 +276,8 @@ export const ExpandedPlayerModal: React.FC = () => {
                       </motion.div>
                     </div>
 
-                    {/* Minimal FFT Visualizer Canvas */}
-                    <div className="mt-8 w-full max-w-sm flex flex-col items-center bg-aura-950/40 p-4 rounded-2xl border border-aura-800/85">
+                    {/* Minimal FFT Visualizer Canvas (Desktop Left Column) */}
+                    <div className="hidden md:flex mt-8 w-full max-w-sm flex-col items-center bg-aura-950/40 p-4 rounded-2xl border border-aura-800/85">
                       <div className="flex items-center justify-between w-full mb-2 px-1">
                         <span className="text-[9px] font-mono text-aura-500 uppercase tracking-wider">
                           Real-time Spectrum
@@ -389,6 +404,25 @@ export const ExpandedPlayerModal: React.FC = () => {
                             <VolumeSlider showReadout={false} />
                           </div>
                         </div>
+                      </div>
+
+                      {/* Mobile Minimal Spectrum Strip */}
+                      <div className="md:hidden mt-4 w-full flex flex-col items-center bg-aura-950/40 p-3 rounded-2xl border border-aura-800/85">
+                        <div className="flex items-center justify-between w-full mb-1.5 px-1">
+                          <span className="text-[9px] font-mono text-aura-500 uppercase tracking-wider">
+                            Real-time Spectrum
+                          </span>
+                          <span className="text-[9px] font-mono text-aura-accent">
+                            {isPlaying ? 'Live Emulation' : 'Suspended'}
+                          </span>
+                        </div>
+                        <VisualizerCanvas
+                          mode="bars"
+                          height={28}
+                          width={260}
+                          barColor="#e07a5f"
+                          className="w-full opacity-80"
+                        />
                       </div>
                     </div>
                   </div>

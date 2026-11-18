@@ -134,13 +134,13 @@ export const UserLibrary: React.FC = () => {
             <div
               key={crate.id}
               onClick={() => navigate(`/playlist/${crate.id}`)}
-              className="p-5 rounded-3xl bg-aura-850 border border-aura-800 hover:border-aura-700/80 transition-all select-none cursor-pointer flex flex-col sm:flex-row gap-5 group"
+              className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-aura-850 border border-aura-800 hover:border-aura-700/80 transition-all select-none cursor-pointer flex flex-row gap-3.5 sm:gap-5 group active:scale-[0.98]"
             >
               {/* Cover Art */}
-              <div className="w-full sm:w-32 aspect-square rounded-2xl overflow-hidden shrink-0 border border-white/5 relative">
+              <div className="w-20 h-20 sm:w-32 sm:h-32 aspect-square rounded-xl sm:rounded-2xl overflow-hidden shrink-0 border border-white/5 relative">
                 <ArtworkImage src={crate.coverUrl} alt={crate.title} />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <Play className="w-8 h-8 text-white fill-current ml-0.5" />
+                  <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white fill-current ml-0.5" />
                 </div>
               </div>
 

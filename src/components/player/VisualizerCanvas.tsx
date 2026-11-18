@@ -139,7 +139,7 @@ export const VisualizerCanvas: React.FC<VisualizerCanvasProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ width: '100%', maxWidth: `${width}px`, height: `${height}px` }}
       className={`block ${className}`}
     />
   );

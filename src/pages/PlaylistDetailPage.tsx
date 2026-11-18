@@ -137,9 +137,9 @@ export const PlaylistDetailPage: React.FC = () => {
       </div>
 
       {/* Playlist Hero */}
-      <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pb-12 border-b border-aura-800/80">
-        <div className="md:col-span-5 lg:col-span-4">
-          <div className="relative aspect-square rounded-3xl overflow-hidden shadow-aura-deck border border-white/10">
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start pb-8 sm:pb-12 border-b border-aura-800/80">
+        <div className="md:col-span-5 lg:col-span-4 max-w-[260px] sm:max-w-xs md:max-w-none mx-auto md:mx-0 w-full">
+          <div className="relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden shadow-aura-deck border border-white/10">
             <ArtworkImage src={crate.coverUrl || (crate.tracks[0]?.coverUrl)} alt={crate.title} />
           </div>
         </div>
