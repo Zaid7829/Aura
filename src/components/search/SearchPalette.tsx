@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Play, Heart, Plus, Loader2, Music } from 'lucide-react';
 import type { Track, Genre } from '../../types/music';
 import { searchJamendoTracks } from '../../services/jamendoApi';
+import { fetchSearchSuggestions } from '../../services/searchSuggestions';
 import { CURATED_TRACKS } from '../../services/mockCatalog';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useLibraryStore } from '../../store/useLibraryStore';
@@ -28,6 +29,7 @@ export const SearchPalette: React.FC = () => {
   const [query, setQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<Genre | 'All'>('All');
   const [results, setResults] = useState<Track[]>(CURATED_TRACKS);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -38,8 +40,20 @@ export const SearchPalette: React.FC = () => {
       setQuery('');
       setSelectedGenre('All');
       setResults(CURATED_TRACKS);
+      setSuggestions([]);
     }
   }, [isSearchOpen]);
+
+  useEffect(() => {
+    if (!query.trim() || query.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetchSearchSuggestions(query, 5).then(setSuggestions);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     if (!isSearchOpen) return;
@@ -111,6 +125,23 @@ export const SearchPalette: React.FC = () => {
                 ESC
               </kbd>
             </div>
+
+            {suggestions.length > 0 && (
+              <div className="flex items-center gap-1.5 px-5 py-2 border-b border-aura-800/50 bg-aura-950/40 overflow-x-auto no-scrollbar">
+                <span className="text-[10px] font-mono text-aura-500 uppercase tracking-wider shrink-0">
+                  Suggestions:
+                </span>
+                {suggestions.map((sugg, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setQuery(sugg)}
+                    className="px-2 py-0.5 rounded text-xs bg-aura-850 hover:bg-aura-800 text-aura-300 hover:text-white transition-colors whitespace-nowrap border border-white/5"
+                  >
+                    {sugg}
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="flex items-center gap-1.5 px-5 py-3 border-b border-aura-800/60 overflow-x-auto bg-aura-900/90 no-scrollbar">
               {GENRE_FILTERS.map((genre) => (

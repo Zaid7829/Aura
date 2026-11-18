@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Clock, Compass, Music, Disc } from 'lucide-react';
 import type { Track, Album, Artist, Genre } from '../types/music';
 import { searchTracks } from '../services/jamendo';
+import { fetchSearchSuggestions } from '../services/searchSuggestions';
 import { MOCK_ARTISTS } from '../data/mockTracks';
 import { SearchInput } from '../components/ui/SearchInput';
 import { ArtistCard } from '../components/music/ArtistCard';
@@ -39,6 +40,8 @@ export const SearchPage: React.FC = () => {
     artists: Artist[];
   }>({ tracks: [], albums: [], artists: [] });
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   // Recent Searches list
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
@@ -69,6 +72,18 @@ export const SearchPage: React.FC = () => {
     }, 300);
 
     return () => clearTimeout(handler);
+  }, [query]);
+
+  // Live YouTube/Search autocomplete suggestions
+  useEffect(() => {
+    if (!query.trim() || query.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetchSearchSuggestions(query, 6).then(setSuggestions);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [query]);
 
   // Fetch results when debounced query updates
@@ -185,6 +200,23 @@ export const SearchPage: React.FC = () => {
             shortcutHint="Ctrl+K"
             isLoading={isLoading}
           />
+
+          {suggestions.length > 0 && (
+            <div className="flex items-center gap-2 mt-3 flex-wrap animate-fadeIn">
+              <span className="text-[10px] font-mono text-aura-500 uppercase tracking-wider">
+                Suggestions:
+              </span>
+              {suggestions.map((sugg, i) => (
+                <button
+                  key={i}
+                  onClick={() => setQuery(sugg)}
+                  className="px-2.5 py-1 rounded-full text-xs bg-aura-850 hover:bg-aura-800 text-aura-300 hover:text-white border border-aura-750 transition-colors"
+                >
+                  {sugg}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

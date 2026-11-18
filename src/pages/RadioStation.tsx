@@ -1,25 +1,51 @@
 import React, { useState } from 'react';
-import { Radio, Play, Pause, Disc3, Waves } from 'lucide-react';
+import { Radio, Play, Pause, Disc3, Waves, RadioTower } from 'lucide-react';
 import { RADIO_STATIONS } from '../services/mockCatalog';
 import { usePlayerStore } from '../store/usePlayerStore';
+import type { Track } from '../types/music';
 import { ArtworkImage } from '../components/ui/ArtworkImage';
 import { Badge } from '../components/ui/Badge';
 import { TactileButton } from '../components/ui/TactileButton';
 import { VisualizerCanvas } from '../components/player/VisualizerCanvas';
 
 export const RadioStation: React.FC = () => {
-  const { playTrack, currentTrack, isPlaying } = usePlayerStore();
+  const { playTrack, currentTrack, isPlaying, togglePlay } = usePlayerStore();
   const [selectedStation, setSelectedStation] = useState(RADIO_STATIONS[0]);
 
-  const handleTuneIn = (station: typeof RADIO_STATIONS[0]) => {
+  const handleTuneIn = (station: (typeof RADIO_STATIONS)[0]) => {
     setSelectedStation(station);
-    if (station.tracks.length > 0) {
+    if (isCurrentStationPlaying && selectedStation.id === station.id) {
+      togglePlay();
+      return;
+    }
+
+    if (station.streamUrl) {
+      const liveTrack: Track = {
+        id: `station-${station.id}`,
+        title: station.name,
+        artist: station.curator,
+        album: 'Live Global Radio Broadcast',
+        duration: 0,
+        audioUrl: station.streamUrl,
+        coverUrl: station.coverUrl,
+        genre: 'Electronic',
+        mood: station.mood,
+        tags: ['Live Radio', 'Icecast Broadcast', station.mood],
+        releaseDate: new Date().toISOString(),
+        isLive: true,
+        waveform: [40, 65, 80, 55, 75, 90, 60, 85, 95, 70],
+        curatorNote: station.description,
+      };
+      playTrack(liveTrack, [liveTrack]);
+    } else if (station.tracks.length > 0) {
       playTrack(station.tracks[0], station.tracks);
     }
   };
 
   const isCurrentStationPlaying =
-    selectedStation.tracks.some((t) => t.id === currentTrack?.id) && isPlaying;
+    (currentTrack?.id === `station-${selectedStation.id}` ||
+      selectedStation.tracks.some((t) => t.id === currentTrack?.id)) &&
+    isPlaying;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12">
@@ -110,12 +136,13 @@ export const RadioStation: React.FC = () => {
 
           <div className="pt-4 border-t border-aura-800 flex items-center justify-between text-xs text-aura-400 font-mono">
             <span>Curator: {selectedStation.curator}</span>
-            <span>Stream: 320 kbps Lossless</span>
+            <span>{selectedStation.isLiveBroadcast ? '🔴 Live Icecast Audio' : 'Stream: 320 kbps Lossless'}</span>
           </div>
         </div>
 
         <div className="lg:col-span-5 space-y-4 flex flex-col">
-          <h3 className="font-serif text-xl text-aura-100 font-medium mb-1">
+          <h3 className="font-serif text-xl text-aura-100 font-medium mb-1 flex items-center gap-2">
+            <RadioTower className="w-5 h-5 text-aura-accent" />
             Available Frequency Streams
           </h3>
 
@@ -157,9 +184,16 @@ export const RadioStation: React.FC = () => {
                       <Badge variant={isSelected ? 'accent' : 'default'} size="sm">
                         {station.mood}
                       </Badge>
-                      <span className="text-[11px] font-mono text-aura-500">
-                        {station.tracks.length} track loop
-                      </span>
+                      {station.isLiveBroadcast ? (
+                        <span className="text-[10px] font-mono text-red-400 font-medium flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping inline-block" />
+                          Live 24/7
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-mono text-aura-500">
+                          {station.tracks.length} track loop
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -42,6 +42,7 @@ export interface Track {
   waveform?: number[];
   playsCount?: number;
   isFavorite?: boolean;
+  isLive?: boolean;
 }
 
 export interface Album {
@@ -107,6 +108,8 @@ export interface RadioStation {
   coverUrl: string;
   curator: string;
   frequencies: string;
+  streamUrl?: string;
+  isLiveBroadcast?: boolean;
   tracks: Track[];
 }
 

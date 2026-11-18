@@ -1,5 +1,6 @@
 import type { Track, Genre, Mood } from '../types/music';
 import { CURATED_TRACKS } from './mockCatalog';
+import { searchAppleMusicTracks } from './itunesApi';
 
 // Public free Jamendo Client ID for legal music access
 const JAMENDO_CLIENT_ID = 'e7beea4a';
@@ -48,6 +49,8 @@ export async function searchJamendoTracks(query: string, limit = 15): Promise<Tr
 
     const data = await res.json();
     if (!data.results || data.results.length === 0) {
+      const appleTracks = await searchAppleMusicTracks(query, limit);
+      if (appleTracks.length > 0) return appleTracks;
       return filterLocalCatalog(query);
     }
 
@@ -77,6 +80,8 @@ export async function searchJamendoTracks(query: string, limit = 15): Promise<Tr
       };
     });
   } catch {
+    const appleTracks = await searchAppleMusicTracks(query, limit);
+    if (appleTracks.length > 0) return appleTracks;
     return filterLocalCatalog(query);
   }
 }

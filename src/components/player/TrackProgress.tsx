@@ -11,10 +11,12 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
   showTimestamps = true,
   className = '',
 }) => {
-  const { currentTime, duration, buffered, seek } = usePlayerStore();
+  const { currentTime, duration, buffered, seek, currentTrack } = usePlayerStore();
   const [hoverPosition, setHoverPosition] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const barRef = useRef<HTMLDivElement | null>(null);
+
+  const isLiveStream = Boolean(currentTrack?.isLive || !isFinite(duration) || (duration <= 0 && currentTime > 0));
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
   const bufferedPercent = duration > 0 ? (buffered / duration) * 100 : 0;
@@ -48,6 +50,28 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  if (isLiveStream) {
+    return (
+      <div className={`flex items-center justify-between gap-3 w-full select-none py-1 ${className}`}>
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+          </span>
+          <span className="text-[10px] font-mono tracking-wider uppercase text-red-400 font-semibold">
+            Live Stream
+          </span>
+        </div>
+        <div className="flex-1 mx-4 h-1 bg-aura-800/60 rounded-full overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-aura-accent/20 via-red-500/30 to-aura-accent/20 animate-pulse" />
+        </div>
+        <span className="text-[11px] font-mono text-aura-400">
+          {formatTime(currentTime)}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex items-center gap-3 w-full select-none ${className}`}>

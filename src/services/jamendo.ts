@@ -1,5 +1,6 @@
 import type { Track, Artist, Album, Genre, Mood } from '../types/music';
 import { CURATED_TRACKS, CURATED_ALBUMS, MOCK_ARTISTS } from '../data/mockTracks';
+import { searchAppleMusicTracks } from './itunesApi';
 
 const CLIENT_ID = import.meta.env.VITE_JAMENDO_CLIENT_ID || 'e7beea4a';
 const BASE_URL = 'https://api.jamendo.com/v3.0';
@@ -101,6 +102,10 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
     const data = await fetchJSON(url);
     if (!data.results || data.results.length === 0) {
+      const appleResults = await searchAppleMusicTracks(query, 15);
+      if (appleResults.length > 0) {
+        return appleResults;
+      }
       return CURATED_TRACKS.filter(
         (t) =>
           t.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -110,6 +115,10 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
     return data.results.map((item: any, idx: number) => normalizeTrack(item, idx));
   } catch {
+    const appleResults = await searchAppleMusicTracks(query, 15);
+    if (appleResults.length > 0) {
+      return appleResults;
+    }
     return CURATED_TRACKS.filter(
       (t) =>
         t.title.toLowerCase().includes(query.toLowerCase()) ||
