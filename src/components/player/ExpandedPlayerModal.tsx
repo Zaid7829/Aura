@@ -302,7 +302,7 @@ export const ExpandedPlayerModal: React.FC = () => {
                       <div className="flex flex-wrap gap-2 mb-3">
                         <Badge variant="accent">{currentTrack.genre}</Badge>
                         <Badge variant="amber">{currentTrack.mood}</Badge>
-                        {currentTrack.bpm && <Badge variant="mono">{formatBpm(currentTrack.bpm)} BPM</Badge>}
+                        {currentTrack.bpm && <Badge variant="mono">{formatBpm(currentTrack.bpm)}</Badge>}
                       </div>
 
                       <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-aura-100 font-normal leading-tight">
@@ -619,7 +619,7 @@ export const ExpandedPlayerModal: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="p-4 rounded-2xl bg-aura-850 border border-aura-800">
                       <span className="text-[10px] font-mono text-aura-500 uppercase">Tempo</span>
-                      <p className="text-lg font-mono text-aura-100 mt-1">{formatBpm(currentTrack.bpm)} BPM</p>
+                      <p className="text-lg font-mono text-aura-100 mt-1">{formatBpm(currentTrack.bpm)}</p>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-aura-850 border border-aura-800">

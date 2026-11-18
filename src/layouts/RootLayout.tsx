@@ -60,7 +60,7 @@ export const RootLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-aura-900 text-aura-200 flex relative font-sans overflow-x-hidden selection:bg-aura-accent selection:text-white">
+    <div className="min-h-screen bg-aura-900 text-aura-200 flex flex-col lg:flex-row relative font-sans overflow-x-hidden selection:bg-aura-accent selection:text-white w-full">
       {/* Background grain texture */}
       <div className="fixed inset-0 pointer-events-none bg-grain opacity-40 z-0" />
 
@@ -273,7 +273,7 @@ export const RootLayout: React.FC = () => {
         )}
 
         {/* Main Content Area Container */}
-        <div className={`flex-1 flex flex-col relative z-10 ${currentTrack ? 'pb-36 sm:pb-40 lg:pb-28' : 'pb-20 lg:pb-12'}`}>
+        <div className={`flex-1 flex flex-col relative z-10 w-full min-w-0 ${currentTrack ? 'pb-36 sm:pb-40 lg:pb-28' : 'pb-20 lg:pb-12'}`}>
           <ErrorBoundary>
             <React.Suspense
               fallback={

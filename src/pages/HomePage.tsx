@@ -100,13 +100,13 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-10 sm:space-y-16 md:space-y-24">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-10 sm:space-y-16 md:space-y-24 min-w-0">
       {/* 1. FEATURED RELEASE (Hero Area) */}
-      <section className="relative border-b border-aura-800/80 pb-8 sm:pb-12">
+      <section className="relative border-b border-aura-800/80 pb-8 sm:pb-12 w-full min-w-0">
         {isLoading || !featuredTrack ? (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
-            <div className="md:col-span-5 aspect-[16/10] sm:aspect-[4/3] md:aspect-square max-h-[240px] xs:max-h-[280px] sm:max-h-[360px] md:max-h-none rounded-2xl sm:rounded-3xl bg-aura-800/40 animate-pulse border border-white/5" />
-            <div className="md:col-span-7 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center w-full min-w-0">
+            <div className="md:col-span-5 aspect-[16/10] sm:aspect-[4/3] md:aspect-square max-h-[240px] xs:max-h-[280px] sm:max-h-[360px] md:max-h-none rounded-2xl sm:rounded-3xl bg-aura-800/40 animate-pulse border border-white/5 w-full min-w-0" />
+            <div className="md:col-span-7 space-y-4 w-full min-w-0">
               <div className="h-5 w-28 bg-aura-800/40 rounded-md animate-pulse" />
               <div className="h-9 w-3/4 bg-aura-800/40 rounded-md animate-pulse" />
               <div className="h-14 w-full bg-aura-800/40 rounded-md animate-pulse" />
@@ -114,9 +114,9 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center w-full min-w-0">
             {/* Artwork Container */}
-            <div className="md:col-span-5 w-full">
+            <div className="md:col-span-5 w-full min-w-0">
               <div
                 onClick={() => playTrack(featuredTrack, [featuredTrack])}
                 className="relative w-full aspect-[16/10] sm:aspect-[4/3] md:aspect-square max-h-[240px] xs:max-h-[280px] sm:max-h-[360px] md:max-h-none rounded-2xl sm:rounded-3xl overflow-hidden shadow-aura-deck border border-white/10 group cursor-pointer active:scale-[0.98] transition-all"
@@ -143,7 +143,7 @@ export const HomePage: React.FC = () => {
             </div>
 
             {/* Editorial copy */}
-            <div className="md:col-span-7 space-y-3.5 sm:space-y-5">
+            <div className="md:col-span-7 space-y-3.5 sm:space-y-5 w-full min-w-0">
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 <Badge variant="accent" size="sm">
                   Sonic Dispatch
@@ -153,11 +153,11 @@ export const HomePage: React.FC = () => {
                 </span>
               </div>
 
-              <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-aura-100 font-normal tracking-tight leading-[1.12] sm:leading-[1.06] text-balance">
+              <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-aura-100 font-normal tracking-tight leading-[1.12] sm:leading-[1.06] text-balance break-words">
                 {featuredTrack.title}
               </h1>
 
-              <p className="text-xs sm:text-base md:text-lg text-aura-300 font-sans leading-relaxed max-w-2xl text-balance line-clamp-3 sm:line-clamp-none">
+              <p className="text-xs sm:text-base md:text-lg text-aura-300 font-sans leading-relaxed max-w-2xl text-balance break-words line-clamp-3 sm:line-clamp-none">
                 An intimate composition constructed using tape degradation and natural room acoustics.
                 Preserving background artifacts rather than cleaning them allows the composition to hold its raw physical presence.
               </p>
@@ -289,7 +289,7 @@ export const HomePage: React.FC = () => {
           subtitle="The independent musicians shaping contemporary minimalist soundscapes."
         />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3.5 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3.5 sm:gap-6 w-full min-w-0">
           {MOCK_ARTISTS.map((artist) => (
             <ArtistCard
               key={artist.id}
@@ -305,14 +305,14 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 6. BROWSE BY MOOD (Editorial Chips) */}
-      <section className="space-y-6">
+      <section className="space-y-6 w-full min-w-0">
         <SectionHeader
           eyebrow="Acoustic Spaces"
           title="Browse by Mood"
           subtitle="Navigate directly to soundscapes tailored for focus, isolation, or late hours."
         />
 
-        <div className="flex flex-wrap gap-3 pt-2">
+        <div className="flex flex-wrap gap-2.5 sm:gap-3 pt-2 w-full min-w-0">
           {moodsList.map((mood) => (
             <button
               key={mood.name}

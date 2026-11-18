@@ -155,23 +155,23 @@ export const DiscoverPage: React.FC = () => {
   }, [moodFilter]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16 sm:space-y-24">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16 sm:space-y-24 min-w-0">
       {/* Editorial Header */}
-      <div>
+      <div className="w-full min-w-0">
         <span className="text-xs font-mono uppercase tracking-wider text-aura-accent">
           Exploration Guide
         </span>
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-aura-100 font-normal mt-1">
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-aura-100 font-normal mt-1 break-words">
           Catalog Explorer
         </h1>
-        <p className="text-sm text-aura-400 font-sans mt-2 max-w-xl">
+        <p className="text-sm text-aura-400 font-sans mt-2 max-w-xl text-balance">
           Browse independent releases by acoustic atmosphere, genre textures, and modular study.
         </p>
       </div>
 
       {/* CONDITIONAL MOOD FILTER RESULTS */}
       {moodFilter && (
-        <section className="space-y-6 animate-in fade-in-50 duration-200">
+        <section className="space-y-6 animate-in fade-in-50 duration-200 w-full min-w-0">
           <SectionHeader
             eyebrow={`Active Atmosphere: ${moodFilter}`}
             title="Atmospheric Results"
@@ -191,7 +191,7 @@ export const DiscoverPage: React.FC = () => {
               description={`We did not find any current catalog releases tagged as ${moodFilter.toLowerCase()}.`}
             />
           ) : (
-            <div className="p-2 rounded-2xl bg-aura-850/40 border border-aura-800 divide-y divide-aura-800/40">
+            <div className="p-2 rounded-2xl bg-aura-850/40 border border-aura-800 divide-y divide-aura-800/40 w-full min-w-0">
               {filteredTracks.map((track, idx) => (
                 <TrackRow key={track.id} track={track} index={idx} playlistContext={filteredTracks} />
               ))}
@@ -202,19 +202,19 @@ export const DiscoverPage: React.FC = () => {
 
       {/* 1. LARGE EDITORIAL SECTION (Featured Showcase) */}
       {!moodFilter && (
-        <section className="relative border border-aura-800/90 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-aura-850/80 to-aura-900/50 p-4 sm:p-6 md:p-10 select-none">
+        <section className="relative border border-aura-800/90 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-aura-850/80 to-aura-900/50 p-4 sm:p-6 md:p-10 select-none w-full min-w-0">
           {isLoading || !featuredTrack ? (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
-              <div className="md:col-span-4 aspect-[16/10] sm:aspect-square max-h-[220px] sm:max-h-none bg-aura-800/30 rounded-2xl animate-pulse" />
-              <div className="md:col-span-8 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center w-full min-w-0">
+              <div className="md:col-span-4 aspect-[16/10] sm:aspect-square max-h-[220px] sm:max-h-none bg-aura-800/30 rounded-2xl animate-pulse w-full min-w-0" />
+              <div className="md:col-span-8 space-y-4 w-full min-w-0">
                 <div className="h-5 w-28 bg-aura-800/30 rounded animate-pulse" />
                 <div className="h-9 w-2/3 bg-aura-800/30 rounded animate-pulse" />
                 <div className="h-14 w-full bg-aura-800/30 rounded animate-pulse" />
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
-              <div className="md:col-span-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center w-full min-w-0">
+              <div className="md:col-span-4 w-full min-w-0">
                 <div
                   onClick={() => playTrack(featuredTrack, [featuredTrack])}
                   className="w-full aspect-[16/10] sm:aspect-square max-h-[220px] sm:max-h-none rounded-2xl overflow-hidden shadow-aura-deck border border-white/5 relative group cursor-pointer active:scale-[0.98] transition-all"
@@ -235,19 +235,19 @@ export const DiscoverPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="md:col-span-8 space-y-4">
-                <div className="flex items-center gap-2">
+              <div className="md:col-span-8 space-y-4 w-full min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="accent">Curator Spotlight</Badge>
                   <span className="text-xs font-mono text-aura-400">
                     {featuredTrack.genre} • {featuredTrack.bpm} BPM
                   </span>
                 </div>
 
-                <h3 className="font-serif text-2xl sm:text-4xl text-aura-100 font-normal leading-tight">
+                <h3 className="font-serif text-2xl sm:text-4xl text-aura-100 font-normal leading-tight break-words text-balance">
                   {featuredTrack.title}
                 </h3>
 
-                <p className="text-sm sm:text-base text-aura-300 font-sans leading-relaxed max-w-2xl">
+                <p className="text-sm sm:text-base text-aura-300 font-sans leading-relaxed max-w-2xl break-words line-clamp-3 sm:line-clamp-none">
                   {featuredTrack.curatorNote ||
                     'Discovered in the independent modular archives. This piece captures dynamic room resonance and tape hiss.'}
                 </p>
@@ -352,7 +352,7 @@ export const DiscoverPage: React.FC = () => {
           subtitle="Explore composer profiles, ambient bios, and their curated Creative Commons discographies."
         />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-6 w-full min-w-0">
           {MOCK_ARTISTS.map((artist) => (
             <ArtistCard
               key={artist.id}

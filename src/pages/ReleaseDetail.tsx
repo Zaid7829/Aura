@@ -70,7 +70,7 @@ export const ReleaseDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-4">
             <AlbumCardSkeleton />
@@ -87,7 +87,7 @@ export const ReleaseDetail: React.FC = () => {
 
   if (hasError || !album) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-w-0">
         <ErrorState
           title="Release Dispatch Missing"
           message="We were unable to locate this specific compiled audio archive. Check your connection or explore another edition."
@@ -100,7 +100,7 @@ export const ReleaseDetail: React.FC = () => {
   const albumId = album.id || '';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-8 sm:space-y-12">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 space-y-8 sm:space-y-12 min-w-0">
       <div>
         <button
           onClick={() => navigate(-1)}

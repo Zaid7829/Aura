@@ -91,7 +91,7 @@ export const ArtistDetailPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-4 aspect-square bg-aura-800/40 rounded-3xl animate-pulse" />
           <div className="md:col-span-8 space-y-4">
@@ -106,7 +106,7 @@ export const ArtistDetailPage: React.FC = () => {
 
   if (hasError || !artist) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-w-0">
         <ErrorState
           title="Artist Record Missing"
           message="We were unable to resolve this composer record. Check your connection or explore another spotlight artist."
@@ -121,7 +121,7 @@ export const ArtistDetailPage: React.FC = () => {
   const artistId = artist.id || '';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16 min-w-0">
       {/* Back navigation */}
       <div>
         <button

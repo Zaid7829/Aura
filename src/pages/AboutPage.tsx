@@ -8,7 +8,7 @@ export const AboutPage: React.FC = () => {
     document.title = 'About — AURA';
   }, []);
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 space-y-12">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 space-y-12 min-w-0">
       <div className="border-b border-aura-800 pb-8">
         <div className="flex items-center gap-2 mb-3">
           <Badge variant="accent">Colophon & Statement</Badge>
