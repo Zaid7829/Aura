@@ -80,13 +80,14 @@ class YouTubePlayerService {
       container.id = 'aura-yt-player-host';
       // Kept rendered with non-zero dimensions off-screen so browsers do not suspend audio playback
       container.style.position = 'fixed';
-      container.style.bottom = '-9999px';
-      container.style.right = '-9999px';
+      container.style.top = '-9999px';
+      container.style.left = '-9999px';
       container.style.width = '240px';
       container.style.height = '180px';
       container.style.opacity = '0.01';
       container.style.pointerEvents = 'none';
       container.style.zIndex = '-1000';
+      container.style.overflow = 'hidden';
       document.body.appendChild(container);
 
       const playerDiv = document.createElement('div');

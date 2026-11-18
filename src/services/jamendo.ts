@@ -1,6 +1,5 @@
 import type { Track, Artist, Album, Genre, Mood } from '../types/music';
 import { CURATED_TRACKS, CURATED_ALBUMS, MOCK_ARTISTS } from '../data/mockTracks';
-import { searchAppleMusicTracks } from './itunesApi';
 import { searchYouTubeTracks } from './youtubeSearch';
 
 const CLIENT_ID = import.meta.env.VITE_JAMENDO_CLIENT_ID || 'e7beea4a';
@@ -90,94 +89,60 @@ function normalizeTrack(item: any, index: number): Track {
   };
 }
 
-// 1. Search tracks
+// 1. Search tracks - Exclusively prioritize Full-Length YouTube Tracks
 export async function searchTracks(query: string): Promise<Track[]> {
   if (!query || query.trim() === '') {
     return CURATED_TRACKS;
   }
 
-  // First priority: Full-Length YouTube Tracks
   try {
     const ytResults = await searchYouTubeTracks(query, 18);
     if (ytResults && ytResults.length > 0) {
       return ytResults;
     }
   } catch (err) {
-    console.warn('YouTube search fallback:', err);
+    console.warn('YouTube search fallback error:', err);
   }
 
-  try {
-    const url = `${BASE_URL}/tracks/?client_id=${CLIENT_ID}&format=json&limit=20&namesearch=${encodeURIComponent(
-      query
-    )}&include=musicinfo+stats&audioformat=mp32`;
-
-    const data = await fetchJSON(url);
-    if (!data.results || data.results.length === 0) {
-      const appleResults = await searchAppleMusicTracks(query, 15);
-      if (appleResults.length > 0) {
-        return appleResults;
-      }
-      return CURATED_TRACKS.filter(
-        (t) =>
-          t.title.toLowerCase().includes(query.toLowerCase()) ||
-          t.artist.toLowerCase().includes(query.toLowerCase())
-      );
-    }
-
-    return data.results.map((item: any, idx: number) => normalizeTrack(item, idx));
-  } catch {
-    const appleResults = await searchAppleMusicTracks(query, 15);
-    if (appleResults.length > 0) {
-      return appleResults;
-    }
-    return CURATED_TRACKS.filter(
-      (t) =>
-        t.title.toLowerCase().includes(query.toLowerCase()) ||
-        t.artist.toLowerCase().includes(query.toLowerCase())
-    );
-  }
+  // Fallback to matching curated catalog with verified YouTube IDs
+  const lower = query.toLowerCase();
+  const matched = CURATED_TRACKS.filter(
+    (t) => t.title.toLowerCase().includes(lower) || t.artist.toLowerCase().includes(lower)
+  );
+  return matched.length > 0 ? matched : CURATED_TRACKS;
 }
 
-// 2. Get featured tracks
+// 2. Get featured tracks - Full-Length YouTube Tracks
 export async function getFeaturedTracks(): Promise<Track[]> {
   try {
-    const url = `${BASE_URL}/tracks/?client_id=${CLIENT_ID}&format=json&limit=10&featured=true&include=musicinfo+stats&audioformat=mp32`;
-    const data = await fetchJSON(url);
-    if (!data.results || data.results.length === 0) return CURATED_TRACKS;
-
-    return data.results.map((item: any, idx: number) => normalizeTrack(item, idx));
-  } catch {
-    return CURATED_TRACKS;
+    const ytTracks = await searchYouTubeTracks('ambient modular tape study', 10);
+    if (ytTracks.length > 0) return ytTracks;
+  } catch (err) {
+    console.warn('YouTube featured fetch error:', err);
   }
+  return CURATED_TRACKS;
 }
 
-// 3. Get popular tracks
+// 3. Get popular tracks - Full-Length YouTube Tracks
 export async function getPopularTracks(): Promise<Track[]> {
   try {
-    const url = `${BASE_URL}/tracks/?client_id=${CLIENT_ID}&format=json&limit=15&order=popularity_month&include=musicinfo+stats&audioformat=mp32`;
-    const data = await fetchJSON(url);
-    if (!data.results || data.results.length === 0) return CURATED_TRACKS;
-
-    return data.results.map((item: any, idx: number) => normalizeTrack(item, idx));
-  } catch {
-    return CURATED_TRACKS;
+    const ytTracks = await searchYouTubeTracks('chill lofi instrumental study beats', 15);
+    if (ytTracks.length > 0) return ytTracks;
+  } catch (err) {
+    console.warn('YouTube popular fetch error:', err);
   }
+  return CURATED_TRACKS;
 }
 
-// 4. Get tracks by genre
+// 4. Get tracks by genre - Full-Length YouTube Tracks
 export async function getTracksByGenre(genre: Genre): Promise<Track[]> {
   try {
-    const searchGenre = genre.toLowerCase().replace(/[^a-z]/g, '');
-    const url = `${BASE_URL}/tracks/?client_id=${CLIENT_ID}&format=json&limit=15&tags=${searchGenre}&include=musicinfo+stats&audioformat=mp32`;
-    const data = await fetchJSON(url);
-    if (!data.results || data.results.length === 0) {
-      return CURATED_TRACKS.filter((t) => t.genre === genre);
-    }
-
-    return data.results.map((item: any, idx: number) => normalizeTrack(item, idx));
-  } catch {
-    return CURATED_TRACKS.filter((t) => t.genre === genre);
+    const ytTracks = await searchYouTubeTracks(`${genre} instrumental soundscape`, 15);
+    if (ytTracks.length > 0) return ytTracks;
+  } catch (err) {
+    console.warn('YouTube genre fetch error:', err);
   }
+  return CURATED_TRACKS.filter((t) => t.genre === genre);
 }
 
 // 5. Get Artist details

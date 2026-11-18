@@ -3,6 +3,7 @@ import type { Track, RepeatMode } from '../types/music';
 import { CURATED_TRACKS } from '../services/mockCatalog';
 import { audioService } from '../services/audioService';
 import { youtubePlayerService } from '../services/youtubePlayer';
+import { resolveYouTubeTrack } from '../services/youtubeSearch';
 import { useLibraryStore } from './useLibraryStore';
 
 
@@ -32,7 +33,7 @@ interface PlayerStore {
   isShortcutsOpen: boolean;
 
   // Actions
-  playTrack: (track: Track, newQueue?: Track[]) => void;
+  playTrack: (track: Track, newQueue?: Track[]) => void | Promise<void>;
   togglePlay: () => void;
   pause: () => void;
   resume: () => void;
@@ -186,7 +187,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
     isSearchOpen: false,
     isShortcutsOpen: false,
 
-    playTrack: (track: Track, newQueue?: Track[]) => {
+    playTrack: async (track: Track, newQueue?: Track[]) => {
       const state = get();
       let updatedQueue = newQueue || state.queue;
       let targetIndex = updatedQueue.findIndex((t) => t.id === track.id);
@@ -207,13 +208,19 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
       saveQueueToStorage(updatedQueue);
       useLibraryStore.getState().addToRecentlyPlayed(track);
 
-      if (track.youtubeId) {
-        audioService.pause();
-        youtubePlayerService.loadAndPlay(track.youtubeId, 0);
-      } else {
-        youtubePlayerService.pause();
-        audioService.loadAndPlay(track.audioUrl, 0);
+      // Stop audioService completely to prevent 30-second previews
+      audioService.pause();
+
+      // EXCLUSIVELY USE YOUTUBE PLAYBACK (Full length, zero 30s snippets)
+      let activeTrack = track;
+      if (!activeTrack.youtubeId) {
+        activeTrack = await resolveYouTubeTrack(track);
+        if (get().currentTrack?.id === track.id) {
+          set({ currentTrack: activeTrack, duration: activeTrack.duration || track.duration });
+        }
       }
+
+      youtubePlayerService.loadAndPlay(activeTrack.youtubeId!, 0);
     },
 
     togglePlay: () => {
@@ -227,11 +234,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
           youtubePlayerService.play();
         }
       } else {
-        if (isPlaying) {
-          audioService.pause();
-        } else {
-          audioService.play();
-        }
+        get().playTrack(currentTrack);
       }
     },
 
@@ -248,8 +251,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
       const { currentTrack } = get();
       if (currentTrack?.youtubeId) {
         youtubePlayerService.play();
-      } else {
-        audioService.play();
+      } else if (currentTrack) {
+        get().playTrack(currentTrack);
       }
     },
 
@@ -302,8 +305,6 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
       const { currentTrack } = get();
       if (currentTrack?.youtubeId) {
         youtubePlayerService.seek(seconds);
-      } else {
-        audioService.seek(seconds);
       }
       set({ currentTime: seconds });
     },
