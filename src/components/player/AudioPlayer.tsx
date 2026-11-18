@@ -39,7 +39,7 @@ export const AudioPlayer: React.FC = () => {
   if (!currentTrack) return null;
 
   return (
-    <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 z-30 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck will-change-transform">
+    <div className="w-full bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck will-change-transform">
       {/* Top micro progress line for mobile */}
       <div className="md:hidden">
         <TrackProgress showTimestamps={false} />
@@ -219,15 +219,15 @@ export const AudioPlayer: React.FC = () => {
 
           <button
             onClick={next}
-            className="w-10 h-10 flex items-center justify-center text-aura-300 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
+            className="w-9 h-9 flex items-center justify-center text-aura-300 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
             aria-label="Next track"
           >
-            <SkipForward className="w-4.5 h-4.5" />
+            <SkipForward className="w-4 h-4" />
           </button>
 
           <button
             onClick={toggleVisualizer}
-            className="w-10 h-10 flex items-center justify-center text-aura-400 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
+            className="w-9 h-9 flex items-center justify-center text-aura-400 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
             aria-label="Open fullscreen deck"
           >
             <Maximize2 className="w-4 h-4" />

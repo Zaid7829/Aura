@@ -105,23 +105,28 @@ export const HomePage: React.FC = () => {
       <section className="relative border-b border-aura-800/80 pb-8 sm:pb-12">
         {isLoading || !featuredTrack ? (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
-            <div className="md:col-span-5 aspect-square rounded-3xl bg-aura-800/40 animate-pulse border border-white/5" />
+            <div className="md:col-span-5 aspect-[16/10] sm:aspect-[4/3] md:aspect-square max-h-[240px] xs:max-h-[280px] sm:max-h-[360px] md:max-h-none rounded-2xl sm:rounded-3xl bg-aura-800/40 animate-pulse border border-white/5" />
             <div className="md:col-span-7 space-y-4">
-              <div className="h-6 w-32 bg-aura-800/40 rounded-md animate-pulse" />
-              <div className="h-12 w-3/4 bg-aura-800/40 rounded-md animate-pulse" />
-              <div className="h-20 w-full bg-aura-800/40 rounded-md animate-pulse" />
-              <div className="h-10 w-40 bg-aura-800/40 rounded-md animate-pulse" />
+              <div className="h-5 w-28 bg-aura-800/40 rounded-md animate-pulse" />
+              <div className="h-9 w-3/4 bg-aura-800/40 rounded-md animate-pulse" />
+              <div className="h-14 w-full bg-aura-800/40 rounded-md animate-pulse" />
+              <div className="h-9 w-32 bg-aura-800/40 rounded-md animate-pulse" />
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
             {/* Artwork Container */}
-            <div className="md:col-span-5">
+            <div className="md:col-span-5 w-full">
               <div
                 onClick={() => playTrack(featuredTrack, [featuredTrack])}
-                className="aspect-square rounded-3xl overflow-hidden shadow-aura-deck border border-white/10 relative group cursor-pointer active:scale-[0.98] transition-transform"
+                className="relative w-full aspect-[16/10] sm:aspect-[4/3] md:aspect-square max-h-[240px] xs:max-h-[280px] sm:max-h-[360px] md:max-h-none rounded-2xl sm:rounded-3xl overflow-hidden shadow-aura-deck border border-white/10 group cursor-pointer active:scale-[0.98] transition-all"
               >
-                <ArtworkImage src={featuredTrack.coverUrl} alt={featuredTrack.title} />
+                <ArtworkImage
+                  src={featuredTrack.coverUrl}
+                  alt={featuredTrack.title}
+                  aspectRatio="auto"
+                  className="w-full h-full object-cover object-center"
+                />
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -130,37 +135,37 @@ export const HomePage: React.FC = () => {
                   className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300"
                   aria-label="Play Featured Track"
                 >
-                  <div className="w-16 h-16 rounded-full bg-aura-accent text-white flex items-center justify-center shadow-lg transform scale-95 group-hover:scale-100 transition-transform duration-300">
-                    <Play className="w-6 h-6 fill-current ml-1" />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-aura-accent text-white flex items-center justify-center shadow-lg transform scale-95 group-hover:scale-100 transition-transform duration-300">
+                    <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current ml-0.5 sm:ml-1" />
                   </div>
                 </button>
               </div>
             </div>
 
             {/* Editorial copy */}
-            <div className="md:col-span-7 space-y-5">
-              <div className="flex items-center gap-2.5">
-                <Badge variant="accent" size="md">
+            <div className="md:col-span-7 space-y-3.5 sm:space-y-5">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                <Badge variant="accent" size="sm">
                   Sonic Dispatch
                 </Badge>
-                <span className="text-xs font-mono text-aura-500">
+                <span className="text-[11px] sm:text-xs font-mono text-aura-500">
                   {featuredTrack.genre} • {featuredTrack.bpm} BPM
                 </span>
               </div>
 
-              <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl text-aura-100 font-normal tracking-tight leading-[1.06] text-balance">
+              <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-aura-100 font-normal tracking-tight leading-[1.12] sm:leading-[1.06] text-balance">
                 {featuredTrack.title}
               </h1>
 
-              <p className="text-base sm:text-lg text-aura-300 font-sans leading-relaxed max-w-2xl text-balance">
+              <p className="text-xs sm:text-base md:text-lg text-aura-300 font-sans leading-relaxed max-w-2xl text-balance line-clamp-3 sm:line-clamp-none">
                 An intimate composition constructed using tape degradation and natural room acoustics.
                 Preserving background artifacts rather than cleaning them allows the composition to hold its raw physical presence.
               </p>
 
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex items-center gap-3 pt-1 sm:pt-2">
                 <TactileButton
                   variant="primary"
-                  size="lg"
+                  size="md"
                   onClick={() => playTrack(featuredTrack, [featuredTrack])}
                   className="gap-2 shadow-aura-subtle"
                 >
@@ -170,9 +175,9 @@ export const HomePage: React.FC = () => {
 
                 <TactileButton
                   variant="secondary"
-                  size="lg"
+                  size="md"
                   onClick={() => toggleFavorite(featuredTrack.id)}
-                  className="p-3"
+                  className="p-2.5 sm:p-3"
                   aria-label="Save to favorites"
                 >
                   <Heart

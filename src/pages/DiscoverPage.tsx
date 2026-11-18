@@ -202,23 +202,29 @@ export const DiscoverPage: React.FC = () => {
 
       {/* 1. LARGE EDITORIAL SECTION (Featured Showcase) */}
       {!moodFilter && (
-        <section className="relative border border-aura-800/90 rounded-3xl bg-gradient-to-br from-aura-850/80 to-aura-900/50 p-6 md:p-10 select-none">
+        <section className="relative border border-aura-800/90 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-aura-850/80 to-aura-900/50 p-4 sm:p-6 md:p-10 select-none">
           {isLoading || !featuredTrack ? (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-              <div className="md:col-span-4 aspect-square bg-aura-800/30 rounded-2xl animate-pulse" />
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
+              <div className="md:col-span-4 aspect-[16/10] sm:aspect-square max-h-[220px] sm:max-h-none bg-aura-800/30 rounded-2xl animate-pulse" />
               <div className="md:col-span-8 space-y-4">
-                <div className="h-6 w-32 bg-aura-800/30 rounded animate-pulse" />
-                <div className="h-10 w-2/3 bg-aura-800/30 rounded animate-pulse" />
-                <div className="h-16 w-full bg-aura-800/30 rounded animate-pulse" />
+                <div className="h-5 w-28 bg-aura-800/30 rounded animate-pulse" />
+                <div className="h-9 w-2/3 bg-aura-800/30 rounded animate-pulse" />
+                <div className="h-14 w-full bg-aura-800/30 rounded animate-pulse" />
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-              <div className="md:col-span-4 max-w-xs md:max-w-none mx-auto md:mx-0 w-full">
-                <div className="aspect-square rounded-2xl overflow-hidden shadow-aura-deck border border-white/5 relative group">
-                  <ArtworkImage src={featuredTrack.coverUrl} alt={featuredTrack.title} />
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
+              <div className="md:col-span-4 w-full">
+                <div
+                  onClick={() => playTrack(featuredTrack, [featuredTrack])}
+                  className="w-full aspect-[16/10] sm:aspect-square max-h-[220px] sm:max-h-none rounded-2xl overflow-hidden shadow-aura-deck border border-white/5 relative group cursor-pointer active:scale-[0.98] transition-all"
+                >
+                  <ArtworkImage src={featuredTrack.coverUrl} alt={featuredTrack.title} aspectRatio="auto" className="w-full h-full object-cover object-center" />
                   <button
-                    onClick={() => playTrack(featuredTrack, [featuredTrack])}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playTrack(featuredTrack, [featuredTrack]);
+                    }}
                     className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
                     aria-label="Play Featured Track"
                   >

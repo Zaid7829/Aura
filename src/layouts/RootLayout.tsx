@@ -205,24 +205,24 @@ export const RootLayout: React.FC = () => {
         </header>
 
         {/* MOBILE COMPACT HEADER */}
-        <header className="lg:hidden flex items-center justify-between px-4 h-16 bg-aura-900/90 backdrop-blur-md sticky top-0 z-20 border-b border-aura-800/80">
+        <header className="lg:hidden flex items-center justify-between px-4 h-16 bg-aura-900/90 backdrop-blur-md sticky top-0 z-20 border-b border-aura-800/80 pt-safe-top">
           <Logo variant="horizontal" size="sm" className="text-aura-100 font-semibold" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 rounded-lg bg-aura-850 border border-aura-800 text-aura-400"
+              className="w-10 h-10 rounded-xl bg-aura-850 border border-aura-800/80 text-aura-400 hover:text-aura-100 flex items-center justify-center active:scale-95 transition-transform"
               aria-label="Search"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4.5 h-4.5" />
             </button>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg bg-aura-850 border border-aura-800 text-aura-400"
+              className="w-10 h-10 rounded-xl bg-aura-850 border border-aura-800/80 text-aura-400 hover:text-aura-100 flex items-center justify-center active:scale-95 transition-transform"
               aria-label="Toggle navigation menu"
             >
-              {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {isMobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
             </button>
           </div>
         </header>
@@ -288,61 +288,66 @@ export const RootLayout: React.FC = () => {
             </React.Suspense>
           </ErrorBoundary>
         </div>
+      </div>
 
-        {/* MOBILE BOTTOM NAVIGATION BAR */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-20 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 py-2 px-2 flex items-center justify-around select-none pb-safe-bottom">
+      {/* UNIFIED DOCKED BOTTOM CONTAINER (Single stacked fixed container) */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 select-none">
+        {/* Persistent Audio Player (renders null if no currentTrack) */}
+        <AudioPlayer />
+
+        {/* MOBILE BOTTOM NAVIGATION BAR (Stacked cleanly beneath the audio player on mobile, hidden on lg:) */}
+        <nav className="lg:hidden bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 py-1.5 px-2 flex items-center justify-around pb-safe-bottom">
           <Link
             to="/"
-            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-1.5 ${
               checkActive('/') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
-            <Home className="w-4 h-4" />
-            <span>Home</span>
+            <Home className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight">Home</span>
           </Link>
           <Link
             to="/discover"
-            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-1.5 ${
               checkActive('/discover') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
-            <Compass className="w-4 h-4" />
-            <span>Discover</span>
+            <Compass className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight">Discover</span>
           </Link>
           <Link
             to="/radio"
-            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-1.5 ${
               checkActive('/radio') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
-            <Radio className="w-4 h-4" />
-            <span>Radio</span>
+            <Radio className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight">Radio</span>
           </Link>
           <Link
             to="/search"
-            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-1.5 ${
               checkActive('/search') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
-            <Search className="w-4 h-4" />
-            <span>Search</span>
+            <Search className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight">Search</span>
           </Link>
           <Link
             to="/library"
-            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-1.5 ${
               checkActive('/library') || checkActive('/favorites') || checkActive('/recent')
                 ? 'text-aura-accent font-semibold'
                 : 'text-aura-400'
             }`}
           >
-            <FolderHeart className="w-4 h-4" />
-            <span>Library</span>
+            <FolderHeart className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight">Library</span>
           </Link>
         </nav>
       </div>
 
-      {/* Global Overlays & Persistent Player (Common across all views) */}
-      <AudioPlayer />
+      {/* Global Overlays & Modals */}
       <QueueDrawer />
       <ExpandedPlayerModal />
       <SearchPalette />
