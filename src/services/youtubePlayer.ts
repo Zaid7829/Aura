@@ -4,6 +4,8 @@
  * seamlessly integrated with Aura's unified Player Store.
  */
 
+import { fetchSkipSegments, getSkipTarget, type SkipSegment } from './sponsorBlock';
+
 declare global {
   interface Window {
     YT: {
@@ -63,6 +65,7 @@ class YouTubePlayerService {
 
   private onStateChange: YouTubeStateCallback | null = null;
   private onEnded: (() => void) | null = null;
+  private activeSegments: SkipSegment[] = [];
 
   private pendingPlayRequest: { videoId: string; startTime: number } | null = null;
 
@@ -209,6 +212,16 @@ class YouTubePlayerService {
     try {
       const currentTime = this.player.getCurrentTime() || 0;
       const duration = this.player.getDuration() || 0;
+
+      // SponsorBlock Auto-Skip check
+      if (this.activeSegments.length > 0 && isPlaying) {
+        const skip = getSkipTarget(this.activeSegments, currentTime);
+        if (skip) {
+          this.seek(skip.targetSeconds);
+          return;
+        }
+      }
+
       this.onStateChange({
         currentTime,
         duration,
@@ -230,6 +243,13 @@ class YouTubePlayerService {
 
   public async loadAndPlay(videoId: string, startTime = 0): Promise<void> {
     this.currentVideoId = videoId;
+    this.activeSegments = [];
+    fetchSkipSegments(videoId).then((segs) => {
+      if (this.currentVideoId === videoId) {
+        this.activeSegments = segs;
+      }
+    });
+
     if (!this.isApiReady || !this.player) {
       this.pendingPlayRequest = { videoId, startTime };
       await this.initApi();
@@ -290,6 +310,10 @@ class YouTubePlayerService {
 
   public getCurrentVideoId(): string | null {
     return this.currentVideoId;
+  }
+
+  public getActiveSegments(): SkipSegment[] {
+    return this.activeSegments;
   }
 }
 

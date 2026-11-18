@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -14,16 +14,21 @@ import {
   Disc3,
   Share2,
   Sparkles,
+  Mic2,
+  ShieldCheck,
 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useLibraryStore } from '../../store/useLibraryStore';
+import { fetchTrackLyrics, type LyricsData } from '../../services/lyricsService';
+import { fetchSimilarRecommendations } from '../../services/recommendationsService';
+import type { Track } from '../../types/music';
 import { ArtworkImage } from '../ui/ArtworkImage';
 import { TactileButton } from '../ui/TactileButton';
 import { Badge } from '../ui/Badge';
 import { TrackProgress } from './TrackProgress';
 import { VolumeSlider } from './VolumeSlider';
 import { VisualizerCanvas } from './VisualizerCanvas';
-import { formatBpm, formatDate } from '../../utils/formatters';
+import { formatBpm, formatDate, formatTime } from '../../utils/formatters';
 
 export const ExpandedPlayerModal: React.FC = () => {
   const {
@@ -31,6 +36,10 @@ export const ExpandedPlayerModal: React.FC = () => {
     setIsVisualizerExpanded,
     currentTrack,
     isPlaying,
+    currentTime,
+    seek,
+    playTrack,
+    queue,
     togglePlay,
     next,
     previous,
@@ -41,15 +50,29 @@ export const ExpandedPlayerModal: React.FC = () => {
   } = usePlayerStore();
 
   const { isFavorite, toggleFavorite, trackNotes, setTrackNote } = useLibraryStore();
-  const [activeTab, setActiveTab] = useState<'deck' | 'notes' | 'specs'>('deck');
+  const [activeTab, setActiveTab] = useState<'deck' | 'lyrics' | 'similar' | 'notes' | 'specs'>('deck');
   const [userNote, setUserNote] = useState('');
   const [showCopied, setShowCopied] = useState(false);
+  const [lyrics, setLyrics] = useState<LyricsData | null>(null);
+  const [isLoadingLyrics, setIsLoadingLyrics] = useState(false);
+  const [recommendations, setRecommendations] = useState<Track[]>([]);
+  const [isLoadingRecs, setIsLoadingRecs] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentTrack) {
       setUserNote(trackNotes[currentTrack.id] || '');
+
+      setIsLoadingLyrics(true);
+      fetchTrackLyrics(currentTrack.title, currentTrack.artist)
+        .then(setLyrics)
+        .finally(() => setIsLoadingLyrics(false));
+
+      setIsLoadingRecs(true);
+      fetchSimilarRecommendations(currentTrack)
+        .then(setRecommendations)
+        .finally(() => setIsLoadingRecs(false));
     }
-  }, [currentTrack, trackNotes]);
+  }, [currentTrack?.id, currentTrack?.title, currentTrack?.artist, trackNotes]);
 
   if (!currentTrack) return null;
 
@@ -105,29 +128,51 @@ export const ExpandedPlayerModal: React.FC = () => {
               <div className="hidden sm:flex items-center gap-1 bg-aura-900 p-1 rounded-lg border border-aura-800">
                 <button
                   onClick={() => setActiveTab('deck')}
-                  className={`px-3 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
                     activeTab === 'deck'
                       ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
                       : 'text-aura-400 hover:text-aura-200'
                   }`}
                 >
                   <Disc3 className="w-3.5 h-3.5 inline mr-1.5" />
-                  Tactile Deck
+                  Deck
+                </button>
+                <button
+                  onClick={() => setActiveTab('lyrics')}
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
+                    activeTab === 'lyrics'
+                      ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
+                      : 'text-aura-400 hover:text-aura-200'
+                  }`}
+                >
+                  <Mic2 className="w-3.5 h-3.5 inline mr-1.5 text-aura-accent" />
+                  Lyrics
+                </button>
+                <button
+                  onClick={() => setActiveTab('similar')}
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
+                    activeTab === 'similar'
+                      ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
+                      : 'text-aura-400 hover:text-aura-200'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 inline mr-1.5 text-amber-400" />
+                  Similar
                 </button>
                 <button
                   onClick={() => setActiveTab('notes')}
-                  className={`px-3 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
                     activeTab === 'notes'
                       ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
                       : 'text-aura-400 hover:text-aura-200'
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5 inline mr-1.5" />
-                  Liner Notes
+                  Notes
                 </button>
                 <button
                   onClick={() => setActiveTab('specs')}
-                  className={`px-3 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium cursor-pointer ${
                     activeTab === 'specs'
                       ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
                       : 'text-aura-400 hover:text-aura-200'
@@ -160,12 +205,12 @@ export const ExpandedPlayerModal: React.FC = () => {
             </div>
 
             {/* Tabs (Mobile Navigation) */}
-            <div className="flex sm:hidden border-b border-aura-800 bg-aura-900/80 px-4 py-2 gap-2">
-              {(['deck', 'notes', 'specs'] as const).map((tab) => (
+            <div className="flex sm:hidden border-b border-aura-800 bg-aura-900/80 px-4 py-2 gap-1 overflow-x-auto no-scrollbar">
+              {(['deck', 'lyrics', 'similar', 'notes', 'specs'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-1.5 text-xs rounded-md font-medium capitalize cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs rounded-md font-medium capitalize cursor-pointer whitespace-nowrap ${
                     activeTab === tab
                       ? 'bg-aura-800 text-aura-100 border border-aura-700 shadow-xs'
                       : 'text-aura-400'
@@ -233,6 +278,13 @@ export const ExpandedPlayerModal: React.FC = () => {
                       <p className="text-xs text-aura-500 mt-1 font-mono">
                         Source: <span className="text-aura-350">{currentTrack.album}</span>
                       </p>
+
+                      {currentTrack.youtubeId && (
+                        <div className="flex items-center gap-1.5 mt-2.5 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-1 rounded-lg w-fit">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <span>SponsorBlock Active: Skipping intros & ads</span>
+                        </div>
+                      )}
 
                       {currentTrack.storyQuote && (
                         <div className="mt-6 p-4 rounded-2xl bg-aura-850/60 border border-aura-800 text-xs text-aura-300 italic font-serif leading-relaxed">
@@ -319,6 +371,127 @@ export const ExpandedPlayerModal: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {activeTab === 'lyrics' && (
+                <div className="max-w-2xl mx-auto space-y-6">
+                  <div className="flex items-center justify-between border-b border-aura-800 pb-4">
+                    <div>
+                      <span className="text-xs font-mono uppercase tracking-wider text-aura-accent">
+                        {lyrics?.hasSync ? 'Synchronized Lyrics' : 'Track Lyrics'}
+                      </span>
+                      <h3 className="font-serif text-2xl text-aura-100 mt-1">
+                        {currentTrack.title}
+                      </h3>
+                      <p className="text-xs text-aura-400">{currentTrack.artist}</p>
+                    </div>
+                    {lyrics?.hasSync && (
+                      <Badge variant="accent">Time-Sync Active</Badge>
+                    )}
+                  </div>
+
+                  {isLoadingLyrics ? (
+                    <div className="py-20 text-center text-aura-500 font-mono text-xs animate-pulse">
+                      Fetching lyrics from global archives...
+                    </div>
+                  ) : !lyrics || (!lyrics.plainLyrics && lyrics.syncedLines.length === 0) ? (
+                    <div className="py-16 text-center text-aura-500">
+                      <Mic2 className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                      <p className="text-sm">No lyrics found for this dispatch.</p>
+                      <p className="text-xs text-aura-600 mt-1">
+                        This may be an instrumental piece, ambient study, or unindexed release.
+                      </p>
+                    </div>
+                  ) : lyrics.hasSync ? (
+                    <div className="space-y-3 py-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
+                      {lyrics.syncedLines.map((line, idx) => {
+                        const isCurrent =
+                          currentTime >= line.time &&
+                          (idx === lyrics.syncedLines.length - 1 ||
+                            currentTime < lyrics.syncedLines[idx + 1].time);
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => seek(line.time)}
+                            className={`w-full text-left transition-all duration-200 py-2 px-3 rounded-xl font-sans cursor-pointer ${
+                              isCurrent
+                                ? 'text-aura-accent font-semibold text-lg bg-aura-850 border border-aura-800/80 shadow-xs'
+                                : 'text-aura-400 hover:text-aura-200 hover:bg-aura-850/30 text-sm'
+                            }`}
+                          >
+                            <span className="text-[10px] font-mono text-aura-500 mr-2 opacity-60">
+                              {formatTime(line.time)}
+                            </span>
+                            {line.text}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="whitespace-pre-line text-sm sm:text-base text-aura-300 font-sans leading-relaxed py-4 max-h-[50vh] overflow-y-auto">
+                      {lyrics.plainLyrics}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'similar' && (
+                <div className="max-w-2xl mx-auto space-y-6">
+                  <div className="border-b border-aura-800 pb-4">
+                    <span className="text-xs font-mono uppercase tracking-wider text-amber-400">
+                      Sonic Recommendations
+                    </span>
+                    <h3 className="font-serif text-2xl text-aura-100 mt-1">
+                      Similar Dispatches to {currentTrack.title}
+                    </h3>
+                    <p className="text-xs text-aura-400 font-sans mt-0.5">
+                      Curated recommendations based on acoustic timbre, genre, and artist similarity.
+                    </p>
+                  </div>
+
+                  {isLoadingRecs ? (
+                    <div className="py-20 text-center text-aura-500 font-mono text-xs animate-pulse">
+                      Generating sonic recommendations...
+                    </div>
+                  ) : recommendations.length === 0 ? (
+                    <div className="py-16 text-center text-aura-500">
+                      <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                      <p className="text-sm">No similar dispatches found.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {recommendations.map((rec) => (
+                        <div
+                          key={rec.id}
+                          className="flex items-center justify-between p-3 rounded-2xl bg-aura-850 border border-aura-800 hover:border-aura-700 transition-colors gap-3"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-white/5">
+                              <ArtworkImage src={rec.coverUrl} alt={rec.title} />
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-sm font-medium text-aura-100 truncate">{rec.title}</h4>
+                              <p className="text-xs text-aura-400 truncate">{rec.artist}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="mono" size="sm">{formatTime(rec.duration)}</Badge>
+                                <span className="text-[10px] font-mono text-aura-500">{rec.genre}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <TactileButton
+                            variant="primary"
+                            size="sm"
+                            onClick={() => playTrack(rec, [rec, ...queue])}
+                            className="shrink-0 gap-1.5"
+                          >
+                            <Play className="w-3.5 h-3.5 fill-current" />
+                            Play
+                          </TactileButton>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
