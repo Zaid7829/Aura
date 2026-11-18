@@ -85,3 +85,4 @@ export async function fetchTrackLyrics(title: string, artist: string): Promise<L
     return null;
   }
 }
+

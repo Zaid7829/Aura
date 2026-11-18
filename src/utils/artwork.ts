@@ -38,3 +38,4 @@ export function getOptimalArtwork(track: {
   }
   return 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop';
 }
+

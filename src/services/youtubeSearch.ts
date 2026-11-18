@@ -65,3 +65,4 @@ export async function searchYouTubeTracks(query: string, limit = 15): Promise<Tr
     return [];
   }
 }
+
