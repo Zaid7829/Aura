@@ -12,7 +12,10 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
   className = '',
   showReadout = true,
 }) => {
-  const { volume, isMuted, setVolume, toggleMute } = usePlayerStore();
+  const volume = usePlayerStore((s) => s.volume);
+  const isMuted = usePlayerStore((s) => s.isMuted);
+  const setVolume = usePlayerStore((s) => s.setVolume);
+  const toggleMute = usePlayerStore((s) => s.toggleMute);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   const effectiveVolume = isMuted ? 0 : volume;

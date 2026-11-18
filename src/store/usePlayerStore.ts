@@ -86,11 +86,15 @@ const INITIAL_TRACK = SAVED_QUEUE[0] || CURATED_TRACKS[0];
 
 export const usePlayerStore = create<PlayerStore>((set, get) => {
   // Wire up audio service callbacks
+  let lastFreqUpdate = 0;
   audioService.setCallbacks({
     onStateChange: ({ currentTime, duration, isPlaying, isLoading, buffered }) => {
       set({ currentTime, duration, isPlaying, isLoading, buffered });
     },
     onFrequencyChange: (data) => {
+      const now = performance.now();
+      if (now - lastFreqUpdate < 32) return;
+      lastFreqUpdate = now;
       const normalized = Array.from(data).slice(0, 32);
       set({ frequencyData: normalized });
     },

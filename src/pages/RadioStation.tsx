@@ -9,7 +9,10 @@ import { TactileButton } from '../components/ui/TactileButton';
 import { VisualizerCanvas } from '../components/player/VisualizerCanvas';
 
 export const RadioStation: React.FC = () => {
-  const { playTrack, currentTrack, isPlaying, togglePlay } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const togglePlay = usePlayerStore((s) => s.togglePlay);
   const [selectedStation, setSelectedStation] = useState(RADIO_STATIONS[0]);
 
   const handleTuneIn = (station: (typeof RADIO_STATIONS)[0]) => {

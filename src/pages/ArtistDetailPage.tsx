@@ -16,8 +16,9 @@ import { ErrorState } from '../components/ui/ErrorState';
 export const ArtistDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { playTrack } = usePlayerStore();
-  const { isFavorite, toggleFavorite } = useLibraryStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const isFavorite = useLibraryStore((s) => s.isFavorite);
+  const toggleFavorite = useLibraryStore((s) => s.toggleFavorite);
 
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);

@@ -12,7 +12,7 @@ export interface AlbumCardProps {
 }
 
 export const AlbumCard: React.FC<AlbumCardProps> = ({ album, onClick, className = '' }) => {
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();

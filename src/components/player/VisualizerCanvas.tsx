@@ -17,19 +17,28 @@ export const VisualizerCanvas: React.FC<VisualizerCanvasProps> = ({
   className = '',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { frequencyData, isPlaying } = usePlayerStore();
+  const frequencyData = usePlayerStore((s) => s.frequencyData);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
 
+  // Setup HiDPI Canvas scaling only when dimensions change
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Support Retina/HiDPI screens
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }, [width, height]);
+
+  // Render loop on frequency updates
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, width, height);
 

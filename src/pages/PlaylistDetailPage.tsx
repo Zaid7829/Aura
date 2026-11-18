@@ -29,7 +29,10 @@ export const PlaylistDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { crates, renameCrate, deleteCrate, removeTrackFromCrate, reorderCrateTracks, toggleFavorite, isFavorite } =
     useLibraryStore();
-  const { currentTrack, isPlaying, playTrack, toggleShuffle } = usePlayerStore();
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
 
   const crate = crates.find((c) => c.id === id);
 

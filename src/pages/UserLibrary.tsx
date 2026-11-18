@@ -20,7 +20,7 @@ import { ArtworkImage } from '../components/ui/ArtworkImage';
 export const UserLibrary: React.FC = () => {
   const navigate = useNavigate();
   const { crates, createCrate, renameCrate, deleteCrate } = useLibraryStore();
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   useEffect(() => {
     document.title = 'Library — AURA';

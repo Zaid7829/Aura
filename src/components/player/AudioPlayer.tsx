@@ -21,39 +21,36 @@ import { VolumeSlider } from './VolumeSlider';
 import { VisualizerCanvas } from './VisualizerCanvas';
 
 export const AudioPlayer: React.FC = () => {
-  const {
-    currentTrack,
-    isPlaying,
-    isLoading,
-    togglePlay,
-    next,
-    previous,
-    setIsQueueOpen,
-    isQueueOpen,
-    toggleVisualizer,
-    setIsShortcutsOpen,
-    queue,
-  } = usePlayerStore();
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const isLoading = usePlayerStore((s) => s.isLoading);
+  const togglePlay = usePlayerStore((s) => s.togglePlay);
+  const next = usePlayerStore((s) => s.next);
+  const previous = usePlayerStore((s) => s.previous);
+  const setIsQueueOpen = usePlayerStore((s) => s.setIsQueueOpen);
+  const isQueueOpen = usePlayerStore((s) => s.isQueueOpen);
+  const toggleVisualizer = usePlayerStore((s) => s.toggleVisualizer);
+  const setIsShortcutsOpen = usePlayerStore((s) => s.setIsShortcutsOpen);
+  const queueLength = usePlayerStore((s) => s.queue.length);
 
-  const { isFavorite, toggleFavorite } = useLibraryStore();
+  const isLiked = useLibraryStore((s) => (currentTrack ? s.isFavorite(currentTrack.id) : false));
+  const toggleFavorite = useLibraryStore((s) => s.toggleFavorite);
 
   if (!currentTrack) return null;
 
-  const isLiked = isFavorite(currentTrack.id);
-
   return (
-    <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 z-30 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck">
+    <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 z-30 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck will-change-transform">
       {/* Top micro progress line for mobile */}
       <div className="md:hidden">
         <TrackProgress showTimestamps={false} className="h-0.5 gap-0 py-0" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-22 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-20 sm:h-22 flex items-center justify-between gap-3 sm:gap-4">
         {/* Left: Track Details & Like */}
-        <div className="flex items-center gap-3.5 min-w-0 flex-1 md:flex-initial md:w-72">
+        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1 md:flex-initial md:w-56 lg:w-72">
           <div
             onClick={toggleVisualizer}
-            className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden cursor-pointer group shadow-xs shrink-0 border border-white/10"
+            className="relative w-11 h-11 sm:w-14 sm:h-14 rounded-xl overflow-hidden cursor-pointer group shadow-xs shrink-0 border border-white/10"
             title="Click to open Master Deck & Liner Notes"
           >
             <motion.div layoutId="player-artwork" className="w-full h-full">
@@ -70,16 +67,16 @@ export const AudioPlayer: React.FC = () => {
               className="text-left w-full truncate block cursor-pointer"
               title={currentTrack.title}
             >
-              <h4 className="text-sm font-medium text-aura-100 truncate hover:text-aura-accent transition-colors">
+              <h4 className="text-xs sm:text-sm font-medium text-aura-100 truncate hover:text-aura-accent transition-colors">
                 {currentTrack.title}
               </h4>
             </button>
             <div className="flex items-center gap-1.5 truncate mt-0.5">
-              <p className="text-xs text-aura-400 truncate font-sans">
+              <p className="text-[11px] sm:text-xs text-aura-400 truncate font-sans">
                 {currentTrack.artist}
               </p>
               {currentTrack.youtubeId && (
-                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-red-950/80 text-red-400 border border-red-800/40 shrink-0">
+                <span className="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-red-950/80 text-red-400 border border-red-800/40 shrink-0">
                   YouTube
                 </span>
               )}
@@ -97,8 +94,8 @@ export const AudioPlayer: React.FC = () => {
           </TactileButton>
         </div>
 
-        {/* Center: Playback Controls & Progress (Desktop) */}
-        <div className="hidden md:flex flex-col items-center gap-1.5 flex-1 max-w-xl">
+        {/* Center: Playback Controls & Progress (Desktop & Tablet) */}
+        <div className="hidden md:flex flex-col items-center gap-1 flex-1 max-w-xl px-2">
           <div className="flex items-center gap-2 sm:gap-4">
             <TactileButton
               variant="ghost"
@@ -141,8 +138,8 @@ export const AudioPlayer: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Visualizer, Volume, Queue & Deck triggers (Desktop) */}
-        <div className="hidden md:flex items-center justify-end gap-1.5 sm:gap-3 md:w-72">
+        {/* Right: Visualizer, Volume, Queue & Deck triggers (Desktop & Tablet) */}
+        <div className="hidden md:flex items-center justify-end gap-1.5 sm:gap-2.5 md:w-56 lg:w-72">
           {/* Mini Real-Time Audio Visualizer trigger */}
           <button
             onClick={toggleVisualizer}
@@ -174,7 +171,7 @@ export const AudioPlayer: React.FC = () => {
             title="Listening Queue (Q)"
           >
             <ListMusic className="w-4 h-4" />
-            {queue.length > 0 && (
+            {queueLength > 0 && (
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-aura-accent" />
             )}
           </TactileButton>
@@ -205,7 +202,7 @@ export const AudioPlayer: React.FC = () => {
         </div>
 
         {/* Mobile-Only Action controls (Visible on mobile, hidden on desktop) */}
-        <div className="flex md:hidden items-center gap-2 shrink-0">
+        <div className="flex md:hidden items-center gap-1 sm:gap-2 shrink-0">
           <button
             onClick={togglePlay}
             className="w-10 h-10 rounded-full bg-aura-100 text-aura-950 flex items-center justify-center cursor-pointer shadow-xs active:scale-95 transition-transform"
@@ -222,7 +219,7 @@ export const AudioPlayer: React.FC = () => {
 
           <button
             onClick={next}
-            className="p-2 text-aura-300 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
+            className="w-10 h-10 flex items-center justify-center text-aura-300 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
             aria-label="Next track"
           >
             <SkipForward className="w-4.5 h-4.5" />
@@ -230,7 +227,7 @@ export const AudioPlayer: React.FC = () => {
 
           <button
             onClick={toggleVisualizer}
-            className="p-2 text-aura-400 hover:text-aura-100 cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center text-aura-400 hover:text-aura-100 cursor-pointer active:scale-90 transition-transform"
             aria-label="Open fullscreen deck"
           >
             <Maximize2 className="w-4 h-4" />

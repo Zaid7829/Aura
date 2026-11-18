@@ -26,11 +26,12 @@ export const TrackRow: React.FC<TrackRowProps> = ({
   showBpm = true,
   playlistContext,
 }) => {
-  const { currentTrack, isPlaying, playTrack, addToQueueNext } = usePlayerStore();
-  const { isFavorite, toggleFavorite } = useLibraryStore();
-
-  const isCurrent = currentTrack?.id === track.id;
-  const isLiked = isFavorite(track.id);
+  const isCurrent = usePlayerStore((s) => s.currentTrack?.id === track.id);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const addToQueueNext = usePlayerStore((s) => s.addToQueueNext);
+  const isLiked = useLibraryStore((s) => s.isFavorite(track.id));
+  const toggleFavorite = useLibraryStore((s) => s.toggleFavorite);
 
   const handlePlayClick = () => {
     if (isCurrent) {
@@ -52,7 +53,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({
         <div className="w-7 h-7 flex items-center justify-center shrink-0">
           <button
             onClick={handlePlayClick}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all relative after:absolute after:-inset-2.5 ${
               isCurrent
                 ? 'bg-aura-accent text-white shadow-sm'
                 : 'text-aura-400 group-hover:bg-aura-800 group-hover:text-aura-100'

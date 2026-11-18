@@ -11,7 +11,8 @@ import {
   Info,
   Menu,
   X,
-  Disc3
+  Disc3,
+  Radio,
 } from 'lucide-react';
 import { AudioPlayer } from '../components/player/AudioPlayer';
 import { QueueDrawer } from '../components/player/QueueDrawer';
@@ -21,6 +22,7 @@ import { KeyboardShortcutsModal } from '../components/common/KeyboardShortcutsMo
 import { ToastContainer } from '../components/ui/Toast';
 import { VisualizerCanvas } from '../components/player/VisualizerCanvas';
 import { Logo } from '../components/brand/Logo';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { usePlayerStore } from '../store/usePlayerStore';
 
@@ -28,12 +30,16 @@ export const RootLayout: React.FC = () => {
   useKeyboardShortcuts();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isPlaying, currentTrack, setIsSearchOpen, toggleVisualizer, setIsShortcutsOpen } =
-    usePlayerStore();
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
+  const setIsSearchOpen = usePlayerStore((s) => s.setIsSearchOpen);
+  const toggleVisualizer = usePlayerStore((s) => s.toggleVisualizer);
+  const setIsShortcutsOpen = usePlayerStore((s) => s.setIsShortcutsOpen);
 
   const navLinks = [
     { path: '/', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { path: '/discover', label: 'Discover', icon: <Compass className="w-4 h-4" /> },
+    { path: '/radio', label: 'Radio', icon: <Radio className="w-4 h-4" /> },
     { path: '/search', label: 'Search', icon: <Search className="w-4 h-4" /> },
   ];
 
@@ -268,24 +274,26 @@ export const RootLayout: React.FC = () => {
 
         {/* Main Content Area Container */}
         <div className={`flex-1 flex flex-col relative z-10 ${currentTrack ? 'pb-44 lg:pb-28' : 'pb-20 lg:pb-12'}`}>
-          <React.Suspense
-            fallback={
-              <div className="flex-1 flex items-center justify-center min-h-[30vh]">
-                <span className="text-xs font-mono text-aura-500 animate-pulse uppercase tracking-wider">
-                  Loading sonic archive...
-                </span>
-              </div>
-            }
-          >
-            <Outlet />
-          </React.Suspense>
+          <ErrorBoundary>
+            <React.Suspense
+              fallback={
+                <div className="flex-1 flex items-center justify-center min-h-[30vh]">
+                  <span className="text-xs font-mono text-aura-500 animate-pulse uppercase tracking-wider">
+                    Loading sonic archive...
+                  </span>
+                </div>
+              }
+            >
+              <Outlet />
+            </React.Suspense>
+          </ErrorBoundary>
         </div>
 
         {/* MOBILE BOTTOM NAVIGATION BAR */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-20 bg-aura-950/90 backdrop-blur-md border-t border-aura-800/80 py-2.5 px-6 flex items-center justify-around select-none pb-safe-bottom">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-20 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 py-2 px-2 flex items-center justify-around select-none pb-safe-bottom">
           <Link
             to="/"
-            className={`flex flex-col items-center gap-1 text-[10px] ${
+            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
               checkActive('/') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
@@ -294,7 +302,7 @@ export const RootLayout: React.FC = () => {
           </Link>
           <Link
             to="/discover"
-            className={`flex flex-col items-center gap-1 text-[10px] ${
+            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
               checkActive('/discover') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
@@ -302,8 +310,17 @@ export const RootLayout: React.FC = () => {
             <span>Discover</span>
           </Link>
           <Link
+            to="/radio"
+            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
+              checkActive('/radio') ? 'text-aura-accent font-semibold' : 'text-aura-400'
+            }`}
+          >
+            <Radio className="w-4 h-4" />
+            <span>Radio</span>
+          </Link>
+          <Link
             to="/search"
-            className={`flex flex-col items-center gap-1 text-[10px] ${
+            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
               checkActive('/search') ? 'text-aura-accent font-semibold' : 'text-aura-400'
             }`}
           >
@@ -312,7 +329,7 @@ export const RootLayout: React.FC = () => {
           </Link>
           <Link
             to="/library"
-            className={`flex flex-col items-center gap-1 text-[10px] ${
+            className={`flex flex-col items-center gap-1 text-[10px] min-w-[3.25rem] py-1 ${
               checkActive('/library') || checkActive('/favorites') || checkActive('/recent')
                 ? 'text-aura-accent font-semibold'
                 : 'text-aura-400'

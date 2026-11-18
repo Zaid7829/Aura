@@ -49,6 +49,7 @@ export const ArtworkImage: React.FC<ArtworkImageProps> = ({
           src={src}
           alt={alt}
           loading="lazy"
+          decoding="async"
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
           className={twMerge(

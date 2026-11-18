@@ -31,23 +31,21 @@ import { VisualizerCanvas } from './VisualizerCanvas';
 import { formatBpm, formatDate, formatTime } from '../../utils/formatters';
 
 export const ExpandedPlayerModal: React.FC = () => {
-  const {
-    isVisualizerExpanded,
-    setIsVisualizerExpanded,
-    currentTrack,
-    isPlaying,
-    currentTime,
-    seek,
-    playTrack,
-    queue,
-    togglePlay,
-    next,
-    previous,
-    repeat,
-    toggleRepeat,
-    shuffle,
-    toggleShuffle,
-  } = usePlayerStore();
+  const isVisualizerExpanded = usePlayerStore((s) => s.isVisualizerExpanded);
+  const setIsVisualizerExpanded = usePlayerStore((s) => s.setIsVisualizerExpanded);
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const currentTime = usePlayerStore((s) => (s.isVisualizerExpanded ? s.currentTime : 0));
+  const seek = usePlayerStore((s) => s.seek);
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const queue = usePlayerStore((s) => s.queue);
+  const togglePlay = usePlayerStore((s) => s.togglePlay);
+  const next = usePlayerStore((s) => s.next);
+  const previous = usePlayerStore((s) => s.previous);
+  const repeat = usePlayerStore((s) => s.repeat);
+  const toggleRepeat = usePlayerStore((s) => s.toggleRepeat);
+  const shuffle = usePlayerStore((s) => s.shuffle);
+  const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
 
   const { isFavorite, toggleFavorite, trackNotes, setTrackNote } = useLibraryStore();
   const [activeTab, setActiveTab] = useState<'deck' | 'lyrics' | 'similar' | 'notes' | 'specs'>('deck');
@@ -136,10 +134,10 @@ export const ExpandedPlayerModal: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 30 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full h-full md:h-auto md:max-h-[92vh] md:max-w-4xl bg-aura-900 border-0 md:border md:border-aura-800 md:rounded-3xl shadow-aura-deck flex flex-col overflow-hidden z-10"
+            className="relative w-full h-full md:h-auto md:max-h-[92vh] md:max-w-4xl bg-aura-900 border-0 md:border md:border-aura-800 md:rounded-3xl shadow-aura-deck flex flex-col overflow-hidden z-10 will-change-transform"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-aura-800/80 bg-aura-950/60">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-aura-800/80 bg-aura-950/80 pt-safe-top">
               <div className="flex items-center gap-3">
                 <span className="w-2 h-2 rounded-full bg-aura-accent" />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-aura-400">
@@ -245,12 +243,12 @@ export const ExpandedPlayerModal: React.FC = () => {
             </div>
 
             {/* Tab Contents */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 pb-14 sm:pb-8">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 pb-safe-bottom mb-2">
               {activeTab === 'deck' && (
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center h-full">
                   {/* Left Column: Artwork (Framer Motion Continuous Transition) */}
                   <div className="md:col-span-6 flex flex-col items-center justify-center relative">
-                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 max-w-full flex items-center justify-center">
+                    <div className="w-40 h-40 xs:w-48 xs:h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 max-h-[30vh] aspect-square max-w-full flex items-center justify-center">
                       <motion.div
                         layoutId="player-artwork"
                         className="w-full h-full rounded-3xl shadow-aura-deck overflow-hidden border border-white/10"

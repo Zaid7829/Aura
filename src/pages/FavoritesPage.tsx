@@ -11,8 +11,10 @@ import { EmptyState } from '../components/ui/EmptyState';
 
 export const FavoritesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { favoriteTracks, favoriteAlbums, favoriteArtists } = useLibraryStore();
-  const { playTrack } = usePlayerStore();
+  const favoriteTracks = useLibraryStore((s) => s.favoriteTracks);
+  const favoriteAlbums = useLibraryStore((s) => s.favoriteAlbums);
+  const favoriteArtists = useLibraryStore((s) => s.favoriteArtists);
+  const playTrack = usePlayerStore((s) => s.playTrack);
   const [activeTab, setActiveTab] = useState<'tracks' | 'albums' | 'artists'>('tracks');
 
   useEffect(() => {

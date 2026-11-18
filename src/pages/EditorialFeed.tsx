@@ -11,7 +11,7 @@ import { EditorialCard } from '../components/common/EditorialCard';
 import { CuratorNote } from '../components/common/CuratorNote';
 
 export const EditorialFeed: React.FC = () => {
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
   const navigate = useNavigate();
 
   const featuredTrack = CURRENT_ISSUE.featuredTracks[0];

@@ -40,7 +40,7 @@ const MOODS: Mood[] = [
 export const DiscoverPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   const [isLoading, setIsLoading] = useState(true);
   const [featuredTrack, setFeaturedTrack] = useState<Track | null>(null);

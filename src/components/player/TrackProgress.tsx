@@ -11,7 +11,11 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
   showTimestamps = true,
   className = '',
 }) => {
-  const { currentTime, duration, buffered, seek, currentTrack } = usePlayerStore();
+  const currentTime = usePlayerStore((s) => s.currentTime);
+  const duration = usePlayerStore((s) => s.duration);
+  const buffered = usePlayerStore((s) => s.buffered);
+  const seek = usePlayerStore((s) => s.seek);
+  const currentTrack = usePlayerStore((s) => s.currentTrack);
   const [hoverPosition, setHoverPosition] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const barRef = useRef<HTMLDivElement | null>(null);

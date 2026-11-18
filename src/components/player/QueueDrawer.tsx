@@ -7,16 +7,14 @@ import { TactileButton } from '../ui/TactileButton';
 import { formatTime } from '../../utils/formatters';
 
 export const QueueDrawer: React.FC = () => {
-  const {
-    isQueueOpen,
-    setIsQueueOpen,
-    queue,
-    queueIndex,
-    playTrack,
-    removeFromQueue,
-    clearQueue,
-    setQueue,
-  } = usePlayerStore();
+  const isQueueOpen = usePlayerStore((s) => s.isQueueOpen);
+  const setIsQueueOpen = usePlayerStore((s) => s.setIsQueueOpen);
+  const queue = usePlayerStore((s) => s.queue);
+  const queueIndex = usePlayerStore((s) => s.queueIndex);
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const removeFromQueue = usePlayerStore((s) => s.removeFromQueue);
+  const clearQueue = usePlayerStore((s) => s.clearQueue);
+  const setQueue = usePlayerStore((s) => s.setQueue);
 
   const handleMoveUp = (index: number) => {
     if (index <= 0) return;
@@ -54,11 +52,11 @@ export const QueueDrawer: React.FC = () => {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed right-0 top-0 bottom-24 w-full sm:w-96 md:w-[420px] z-50 bg-aura-900 border-l border-aura-700/80 shadow-aura-deck flex flex-col overflow-hidden"
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            className="fixed right-0 top-0 bottom-0 sm:bottom-24 w-full sm:w-96 md:w-[420px] z-50 bg-aura-900 border-l border-aura-700/80 shadow-aura-deck flex flex-col overflow-hidden will-change-transform pt-safe-top pb-safe-bottom"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-aura-800">
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 border-b border-aura-800 bg-aura-950/60">
               <div className="flex items-center gap-2.5">
                 <Music2 className="w-4 h-4 text-aura-accent" />
                 <h3 className="font-serif text-lg text-aura-100 font-medium">

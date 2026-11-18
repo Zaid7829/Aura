@@ -11,7 +11,7 @@ export interface PlaylistCardProps {
 }
 
 export const PlaylistCard: React.FC<PlaylistCardProps> = ({ crate, onClick, className = '' }) => {
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   const handlePlay = (e: React.MouseEvent) => {
     e.stopPropagation();

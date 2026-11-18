@@ -33,7 +33,7 @@ const MOODS: (Mood | 'All')[] = [
 ];
 
 export const CatalogBrowse: React.FC = () => {
-  const { playTrack } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<Genre | 'All'>('All');

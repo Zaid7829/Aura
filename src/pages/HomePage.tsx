@@ -17,8 +17,10 @@ import { AlbumCardSkeleton, TrackRowSkeleton } from '../components/ui/Skeleton';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { playTrack } = usePlayerStore();
-  const { recentlyPlayed, toggleFavorite, isFavorite } = useLibraryStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const recentlyPlayed = useLibraryStore((s) => s.recentlyPlayed);
+  const toggleFavorite = useLibraryStore((s) => s.toggleFavorite);
+  const isFavorite = useLibraryStore((s) => s.isFavorite);
 
   const [isLoading, setIsLoading] = useState(true);
   const [featuredTrack, setFeaturedTrack] = useState<Track | null>(null);

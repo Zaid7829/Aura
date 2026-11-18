@@ -15,7 +15,8 @@ import { ErrorState } from '../components/ui/ErrorState';
 export const ReleaseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { playTrack, toggleShuffle } = usePlayerStore();
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const toggleShuffle = usePlayerStore((s) => s.toggleShuffle);
   const { isFavorite, toggleFavorite } = useLibraryStore();
 
   const [isLoading, setIsLoading] = useState(true);

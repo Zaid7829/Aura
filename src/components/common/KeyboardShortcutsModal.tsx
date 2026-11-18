@@ -3,7 +3,8 @@ import { Modal } from '../ui/Modal';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export const KeyboardShortcutsModal: React.FC = () => {
-  const { isShortcutsOpen, setIsShortcutsOpen } = usePlayerStore();
+  const isShortcutsOpen = usePlayerStore((s) => s.isShortcutsOpen);
+  const setIsShortcutsOpen = usePlayerStore((s) => s.setIsShortcutsOpen);
 
   const shortcuts = [
     { key: 'Space', desc: 'Play / Pause playback' },

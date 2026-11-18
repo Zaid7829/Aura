@@ -6,8 +6,9 @@ import { TrackRow } from '../components/common/TrackRow';
 import { TactileButton } from '../components/ui/TactileButton';
 
 export const RecentPage: React.FC = () => {
-  const { recentlyPlayed, clearHistory } = useLibraryStore();
-  const { playTrack } = usePlayerStore();
+  const recentlyPlayed = useLibraryStore((s) => s.recentlyPlayed);
+  const clearHistory = useLibraryStore((s) => s.clearHistory);
+  const playTrack = usePlayerStore((s) => s.playTrack);
 
   useEffect(() => {
     document.title = 'Recent — AURA';

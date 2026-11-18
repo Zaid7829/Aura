@@ -23,7 +23,10 @@ const GENRE_FILTERS: (Genre | 'All')[] = [
 ];
 
 export const SearchPalette: React.FC = () => {
-  const { isSearchOpen, setIsSearchOpen, playTrack, addToQueueNext } = usePlayerStore();
+  const isSearchOpen = usePlayerStore((s) => s.isSearchOpen);
+  const setIsSearchOpen = usePlayerStore((s) => s.setIsSearchOpen);
+  const playTrack = usePlayerStore((s) => s.playTrack);
+  const addToQueueNext = usePlayerStore((s) => s.addToQueueNext);
   const { isFavorite, toggleFavorite } = useLibraryStore();
 
   const [query, setQuery] = useState('');
@@ -94,7 +97,7 @@ export const SearchPalette: React.FC = () => {
   return (
     <AnimatePresence>
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-20 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-safe-top sm:pt-20 p-2 sm:p-4 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
