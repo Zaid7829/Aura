@@ -130,12 +130,12 @@ export const DiscoverPage: React.FC = () => {
 
   // Fetch mood filter tracks
   useEffect(() => {
-    if (!moodFilter) {
-      setFilteredTracks([]);
-      return;
-    }
     let active = true;
     async function loadMoodTracks() {
+      if (!moodFilter) {
+        setFilteredTracks([]);
+        return;
+      }
       setIsFiltering(true);
       try {
         const tracks = await searchTracks(moodFilter || '');

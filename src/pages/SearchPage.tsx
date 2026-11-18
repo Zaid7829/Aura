@@ -76,26 +76,34 @@ export const SearchPage: React.FC = () => {
 
   // Live YouTube/Search autocomplete suggestions
   useEffect(() => {
-    if (!query.trim() || query.trim().length < 2) {
-      setSuggestions([]);
-      return;
-    }
     const timer = setTimeout(() => {
+      if (!query.trim() || query.trim().length < 2) {
+        setSuggestions([]);
+        return;
+      }
       fetchSearchSuggestions(query, 6).then(setSuggestions);
     }, 150);
     return () => clearTimeout(timer);
   }, [query]);
 
+  const saveRecentSearch = (searchVal: string) => {
+    setRecentSearches((prev) => {
+      const filtered = prev.filter((item) => item.toLowerCase() !== searchVal.toLowerCase());
+      const updated = [searchVal, ...filtered].slice(0, 5);
+      localStorage.setItem('aura_recent_searches', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   // Fetch results when debounced query updates
   useEffect(() => {
-    if (!debouncedQuery.trim()) {
-      setResults({ tracks: [], albums: [], artists: [] });
-      setHasError(false);
-      return;
-    }
-
     let active = true;
     async function performSearch() {
+      if (!debouncedQuery.trim()) {
+        setResults({ tracks: [], albums: [], artists: [] });
+        setHasError(false);
+        return;
+      }
       setIsLoading(true);
       setHasError(false);
       try {
@@ -161,15 +169,6 @@ export const SearchPage: React.FC = () => {
       active = false;
     };
   }, [debouncedQuery]);
-
-  const saveRecentSearch = (searchVal: string) => {
-    setRecentSearches((prev) => {
-      const filtered = prev.filter((item) => item.toLowerCase() !== searchVal.toLowerCase());
-      const updated = [searchVal, ...filtered].slice(0, 5);
-      localStorage.setItem('aura_recent_searches', JSON.stringify(updated));
-      return updated;
-    });
-  };
 
   const handleClearRecent = () => {
     localStorage.removeItem('aura_recent_searches');

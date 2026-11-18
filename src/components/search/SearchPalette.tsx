@@ -33,23 +33,26 @@ export const SearchPalette: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const handleClose = () => {
+    setIsSearchOpen(false);
+    setQuery('');
+    setSelectedGenre('All');
+    setResults(CURATED_TRACKS);
+    setSuggestions([]);
+  };
+
   useEffect(() => {
     if (isSearchOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery('');
-      setSelectedGenre('All');
-      setResults(CURATED_TRACKS);
-      setSuggestions([]);
     }
   }, [isSearchOpen]);
 
   useEffect(() => {
-    if (!query.trim() || query.trim().length < 2) {
-      setSuggestions([]);
-      return;
-    }
     const timer = setTimeout(() => {
+      if (!query.trim() || query.trim().length < 2) {
+        setSuggestions([]);
+        return;
+      }
       fetchSearchSuggestions(query, 5).then(setSuggestions);
     }, 150);
     return () => clearTimeout(timer);
@@ -85,7 +88,7 @@ export const SearchPalette: React.FC = () => {
 
   const handleSelectTrack = (track: Track) => {
     playTrack(track, results);
-    setIsSearchOpen(false);
+    handleClose();
   };
 
   return (
@@ -96,7 +99,7 @@ export const SearchPalette: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsSearchOpen(false)}
+            onClick={handleClose}
             className="fixed inset-0 bg-aura-950/80 backdrop-blur-sm"
           />
 

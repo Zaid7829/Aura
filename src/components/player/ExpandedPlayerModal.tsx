@@ -51,7 +51,14 @@ export const ExpandedPlayerModal: React.FC = () => {
 
   const { isFavorite, toggleFavorite, trackNotes, setTrackNote } = useLibraryStore();
   const [activeTab, setActiveTab] = useState<'deck' | 'lyrics' | 'similar' | 'notes' | 'specs'>('deck');
-  const [userNote, setUserNote] = useState('');
+  const trackId = currentTrack?.id || '';
+  const [userNote, setUserNote] = useState(trackNotes[trackId] || '');
+  const prevTrackIdRef = React.useRef(trackId);
+  if (prevTrackIdRef.current !== trackId) {
+    prevTrackIdRef.current = trackId;
+    setUserNote(trackNotes[trackId] || '');
+  }
+
   const [showCopied, setShowCopied] = useState(false);
   const [lyrics, setLyrics] = useState<LyricsData | null>(null);
   const [isLoadingLyrics, setIsLoadingLyrics] = useState(false);
@@ -59,20 +66,36 @@ export const ExpandedPlayerModal: React.FC = () => {
   const [isLoadingRecs, setIsLoadingRecs] = useState(false);
 
   useEffect(() => {
-    if (currentTrack) {
-      setUserNote(trackNotes[currentTrack.id] || '');
+    if (!currentTrack) return;
+    let active = true;
 
-      setIsLoadingLyrics(true);
-      fetchTrackLyrics(currentTrack.title, currentTrack.artist)
-        .then(setLyrics)
-        .finally(() => setIsLoadingLyrics(false));
+    queueMicrotask(() => {
+      if (active) {
+        setIsLoadingLyrics(true);
+        setIsLoadingRecs(true);
+      }
+    });
 
-      setIsLoadingRecs(true);
-      fetchSimilarRecommendations(currentTrack)
-        .then(setRecommendations)
-        .finally(() => setIsLoadingRecs(false));
-    }
-  }, [currentTrack?.id, currentTrack?.title, currentTrack?.artist, trackNotes]);
+    fetchTrackLyrics(currentTrack.title, currentTrack.artist)
+      .then((data) => {
+        if (active) setLyrics(data);
+      })
+      .finally(() => {
+        if (active) setIsLoadingLyrics(false);
+      });
+
+    fetchSimilarRecommendations(currentTrack)
+      .then((recs) => {
+        if (active) setRecommendations(recs);
+      })
+      .finally(() => {
+        if (active) setIsLoadingRecs(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [currentTrack]);
 
   if (!currentTrack) return null;
 

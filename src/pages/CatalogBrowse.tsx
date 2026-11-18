@@ -43,19 +43,18 @@ export const CatalogBrowse: React.FC = () => {
   const [liveTracks, setLiveTracks] = useState<Track[]>(CURATED_TRACKS);
 
   React.useEffect(() => {
-    if (!searchQuery.trim()) {
-      setLiveTracks(CURATED_TRACKS);
-      return;
-    }
-
     const timer = setTimeout(async () => {
+      if (!searchQuery.trim()) {
+        setLiveTracks(CURATED_TRACKS);
+        return;
+      }
       try {
         const results = await searchJamendoTracks(searchQuery, 25);
         setLiveTracks(results);
       } catch (err) {
         console.warn('Search failed:', err);
       }
-    }, 250);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
