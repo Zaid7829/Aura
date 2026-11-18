@@ -81,6 +81,14 @@
   box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8);
 }
 
+/* Safe area padding utilities for mobile devices */
+.pb-safe-bottom {
+  padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+}
+.pt-safe-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {

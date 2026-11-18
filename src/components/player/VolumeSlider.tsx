@@ -17,12 +17,22 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
 
   const effectiveVolume = isMuted ? 0 : volume;
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSeek = (clientX: number) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
+    const clickX = clientX - rect.left;
     const ratio = Math.max(0, Math.min(1, clickX / rect.width));
     setVolume(ratio);
+  };
+
+  const handleMouseEvent = (e: React.MouseEvent<HTMLDivElement>) => {
+    handleSeek(e.clientX);
+  };
+
+  const handleTouchEvent = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches[0]) {
+      handleSeek(e.touches[0].clientX);
+    }
   };
 
   const volumePercent = Math.round(effectiveVolume * 100);
@@ -48,14 +58,16 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
       {/* Volume Slider Track */}
       <div
         ref={trackRef}
-        onClick={handleSeek}
+        onClick={handleMouseEvent}
+        onTouchStart={handleTouchEvent}
+        onTouchMove={handleTouchEvent}
         role="slider"
         aria-label="Volume level"
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={volumePercent}
         tabIndex={0}
-        className="relative w-20 h-5 flex items-center cursor-pointer group"
+        className="relative w-20 h-6 flex items-center cursor-pointer group touch-none"
       >
         <div className="w-full h-1 group-hover:h-1.5 bg-aura-800 rounded-full overflow-hidden transition-all duration-150 relative">
           <div

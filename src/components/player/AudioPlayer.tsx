@@ -42,7 +42,7 @@ export const AudioPlayer: React.FC = () => {
   const isLiked = isFavorite(currentTrack.id);
 
   return (
-    <div className="fixed bottom-14 lg:bottom-0 left-0 right-0 z-40 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck">
+    <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-0 left-0 right-0 z-30 bg-aura-950/95 backdrop-blur-md border-t border-aura-800/80 select-none shadow-aura-deck">
       {/* Top micro progress line for mobile */}
       <div className="md:hidden">
         <TrackProgress showTimestamps={false} className="h-0.5 gap-0 py-0" />

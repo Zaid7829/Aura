@@ -21,15 +21,15 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
   const bufferedPercent = duration > 0 ? (buffered / duration) * 100 : 0;
 
-  const getPositionFromEvent = (e: React.MouseEvent<HTMLDivElement>) => {
+  const getPositionFromClientX = (clientX: number) => {
     if (!barRef.current) return 0;
     const rect = barRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
+    const clickX = clientX - rect.left;
     return Math.max(0, Math.min(1, clickX / rect.width));
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const ratio = getPositionFromEvent(e);
+    const ratio = getPositionFromClientX(e.clientX);
     setHoverPosition(ratio);
     if (isDragging) {
       seek(ratio * duration);
@@ -43,11 +43,28 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
-    const ratio = getPositionFromEvent(e);
+    const ratio = getPositionFromClientX(e.clientX);
     seek(ratio * duration);
   };
 
   const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!e.touches[0]) return;
+    setIsDragging(true);
+    const ratio = getPositionFromClientX(e.touches[0].clientX);
+    seek(ratio * duration);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDragging || !e.touches[0]) return;
+    const ratio = getPositionFromClientX(e.touches[0].clientX);
+    seek(ratio * duration);
+  };
+
+  const handleTouchEnd = () => {
     setIsDragging(false);
   };
 
@@ -88,13 +105,17 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
         onMouseLeave={handleMouseLeave}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
         role="slider"
         aria-label="Track playback seeker"
         aria-valuemin={0}
         aria-valuemax={Math.round(duration)}
         aria-valuenow={Math.round(currentTime)}
         tabIndex={0}
-        className="relative flex-1 h-6 flex items-center cursor-pointer group"
+        className="relative flex-1 h-7 flex items-center cursor-pointer group touch-none"
       >
         {/* Track background */}
         <div className="w-full h-1 group-hover:h-1.5 bg-aura-800 rounded-full overflow-hidden transition-all duration-150 relative">
@@ -111,10 +132,10 @@ export const TrackProgress: React.FC<TrackProgressProps> = ({
           />
         </div>
 
-        {/* Tactile Handle / Thumb */}
+        {/* Tactile Handle / Thumb (always visible on mobile touch, hover on desktop) */}
         <div
           style={{ left: `${progressPercent}%` }}
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none border border-black/20"
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 sm:w-3 sm:h-3 bg-white rounded-full shadow-md opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-150 pointer-events-none border border-black/20"
         />
 
         {/* Hover Time Tooltip */}

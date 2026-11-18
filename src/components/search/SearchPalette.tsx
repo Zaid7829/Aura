@@ -94,7 +94,7 @@ export const SearchPalette: React.FC = () => {
   return (
     <AnimatePresence>
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-20 p-2 sm:p-4 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -108,7 +108,7 @@ export const SearchPalette: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-2xl bg-aura-900 border border-aura-700/80 rounded-2xl shadow-aura-deck overflow-hidden z-10 flex flex-col max-h-[80vh]"
+            className="relative w-full max-w-2xl bg-aura-900 border border-aura-700/80 rounded-2xl shadow-aura-deck overflow-hidden z-10 flex flex-col max-h-[88vh]"
           >
             <div className="flex items-center px-5 py-4 border-b border-aura-800 bg-aura-950/50 gap-3">
               {isSearching ? (

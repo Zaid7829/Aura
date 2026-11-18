@@ -245,12 +245,12 @@ export const ExpandedPlayerModal: React.FC = () => {
             </div>
 
             {/* Tab Contents */}
-            <div className="flex-1 overflow-y-auto p-6 md:p-10">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 pb-14 sm:pb-8">
               {activeTab === 'deck' && (
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center h-full">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center h-full">
                   {/* Left Column: Artwork (Framer Motion Continuous Transition) */}
                   <div className="md:col-span-6 flex flex-col items-center justify-center relative">
-                    <div className="w-64 h-64 sm:w-80 sm:h-80 max-w-full flex items-center justify-center">
+                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 max-w-full flex items-center justify-center">
                       <motion.div
                         layoutId="player-artwork"
                         className="w-full h-full rounded-3xl shadow-aura-deck overflow-hidden border border-white/10"

@@ -267,7 +267,7 @@ export const RootLayout: React.FC = () => {
         )}
 
         {/* Main Content Area Container */}
-        <div className="flex-1 flex flex-col relative z-10 pb-36 lg:pb-24">
+        <div className={`flex-1 flex flex-col relative z-10 ${currentTrack ? 'pb-44 lg:pb-28' : 'pb-20 lg:pb-12'}`}>
           <React.Suspense
             fallback={
               <div className="flex-1 flex items-center justify-center min-h-[30vh]">
