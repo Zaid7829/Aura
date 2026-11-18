@@ -1,7 +1,7 @@
 /**
  * Lyrics Service
- * Fetches time-synchronized and plain lyrics using LRCLIB API.
- * Supports synchronized line-by-line highlight during music playback.
+ * Fetches time-synchronized and plain lyrics using LRCLIB API with
+ * fallbacks and deep links to www.lyricsmania.com and www.paroles.net.
  */
 
 export interface SyncedLyricLine {
@@ -13,6 +13,8 @@ export interface LyricsData {
   plainLyrics: string;
   syncedLines: SyncedLyricLine[];
   hasSync: boolean;
+  lyricsManiaUrl: string;
+  parolesUrl: string;
 }
 
 const lyricsCache = new Map<string, LyricsData | null>();
@@ -28,6 +30,13 @@ export async function fetchTrackLyrics(title: string, artist: string): Promise<L
     .replace(/VEVO$/i, '')
     .trim();
 
+  const lyricsManiaUrl = `https://www.lyricsmania.com/search.php?k=${encodeURIComponent(
+    `${cleanArtist} ${cleanTitle}`
+  )}`;
+  const parolesUrl = `https://www.paroles.net/recherche?q=${encodeURIComponent(
+    `${cleanArtist} ${cleanTitle}`
+  )}`;
+
   const cacheKey = `${cleanTitle.toLowerCase()}:::${cleanArtist.toLowerCase()}`;
   if (lyricsCache.has(cacheKey)) {
     return lyricsCache.get(cacheKey) || null;
@@ -39,14 +48,21 @@ export async function fetchTrackLyrics(title: string, artist: string): Promise<L
     )}&track_name=${encodeURIComponent(cleanTitle)}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
 
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);
 
     if (!res.ok) {
-      lyricsCache.set(cacheKey, null);
-      return null;
+      const fallback: LyricsData = {
+        plainLyrics: '',
+        syncedLines: [],
+        hasSync: false,
+        lyricsManiaUrl,
+        parolesUrl,
+      };
+      lyricsCache.set(cacheKey, fallback);
+      return fallback;
     }
 
     const data = await res.json();
@@ -75,14 +91,22 @@ export async function fetchTrackLyrics(title: string, artist: string): Promise<L
       plainLyrics: plainLyrics || (syncedLines.length > 0 ? syncedLines.map((l) => l.text).join('\n') : ''),
       syncedLines,
       hasSync: syncedLines.length > 0,
+      lyricsManiaUrl,
+      parolesUrl,
     };
 
     lyricsCache.set(cacheKey, result);
     return result;
   } catch (err) {
     console.warn('Lyrics fetch error:', err);
-    lyricsCache.set(cacheKey, null);
-    return null;
+    const fallback: LyricsData = {
+      plainLyrics: '',
+      syncedLines: [],
+      hasSync: false,
+      lyricsManiaUrl,
+      parolesUrl,
+    };
+    lyricsCache.set(cacheKey, fallback);
+    return fallback;
   }
 }
-

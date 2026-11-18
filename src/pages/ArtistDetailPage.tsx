@@ -51,11 +51,13 @@ export const ArtistDetailPage: React.FC = () => {
           const albums: Album[] = [];
           const seenAlbums = new Set<string>();
           tracks.forEach((t) => {
-            if (t.album && t.albumId && !seenAlbums.has(t.albumId)) {
-              seenAlbums.add(t.albumId);
+            const albumTitle = t.album || 'Selected Recordings';
+            const albumKey = albumTitle.toLowerCase().trim();
+            if (!seenAlbums.has(albumKey)) {
+              seenAlbums.add(albumKey);
               albums.push({
-                id: t.albumId,
-                title: t.album,
+                id: t.albumId || `album-${encodeURIComponent(albumKey.replace(/[^a-z0-9]/g, '-'))}`,
+                title: albumTitle,
                 artist: t.artist,
                 year: '2024',
                 coverUrl: t.coverUrl,

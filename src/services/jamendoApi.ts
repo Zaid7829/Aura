@@ -49,7 +49,7 @@ export async function searchJamendoTracks(query: string, limit = 15): Promise<Tr
     )}&include=musicinfo&audioformat=mp32`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
 
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);

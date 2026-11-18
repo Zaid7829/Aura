@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Clock, Compass, Music, Disc } from 'lucide-react';
 import type { Track, Album, Artist, Genre } from '../types/music';
 import { searchTracks } from '../services/jamendo';
+import { searchAppleMusicAlbums, searchAppleMusicArtists } from '../services/itunesApi';
 import { fetchSearchSuggestions } from '../services/searchSuggestions';
-import { MOCK_ARTISTS } from '../data/mockTracks';
+import { MOCK_ARTISTS, CURATED_ALBUMS } from '../data/mockTracks';
 import { SearchInput } from '../components/ui/SearchInput';
 import { ArtistCard } from '../components/music/ArtistCard';
 import { AlbumCard } from '../components/music/AlbumCard';
@@ -107,39 +108,69 @@ export const SearchPage: React.FC = () => {
       setIsLoading(true);
       setHasError(false);
       try {
-        const tracks = await searchTracks(debouncedQuery);
+        const [tracks, onlineAlbums, onlineArtists] = await Promise.all([
+          searchTracks(debouncedQuery),
+          searchAppleMusicAlbums(debouncedQuery, 4),
+          searchAppleMusicArtists(debouncedQuery, 3),
+        ]);
 
         if (!active) return;
 
-        // Group tracks into dummy albums for categories
-        const albums: Album[] = [];
-        const seenAlbums = new Set<string>();
+        // Group albums from online results and local catalog
+        const albums: Album[] = [...onlineAlbums];
+        const seenAlbums = new Set<string>(onlineAlbums.map((a) => a.title.toLowerCase().trim()));
+
+        const qLower = debouncedQuery.toLowerCase().trim();
+        for (const ca of CURATED_ALBUMS) {
+          if (ca.title.toLowerCase().includes(qLower) || ca.artist.toLowerCase().includes(qLower)) {
+            if (!seenAlbums.has(ca.title.toLowerCase().trim())) {
+              seenAlbums.add(ca.title.toLowerCase().trim());
+              albums.unshift(ca);
+            }
+          }
+        }
+
+        // Fill remaining album spots from discovered tracks
         tracks.forEach((t) => {
-          if (t.album && t.albumId && !seenAlbums.has(t.albumId)) {
-            seenAlbums.add(t.albumId);
+          const albumTitle = t.album || 'Single Edition';
+          const albumKey = albumTitle.toLowerCase().trim();
+          if (!seenAlbums.has(albumKey) && albums.length < 4) {
+            seenAlbums.add(albumKey);
             albums.push({
-              id: t.albumId,
-              title: t.album,
+              id: t.albumId || `album-${encodeURIComponent(albumKey.replace(/[^a-z0-9]/g, '-'))}`,
+              title: albumTitle,
               artist: t.artist,
               year: '2024',
               coverUrl: t.coverUrl,
               genre: t.genre,
-              curatorEssay: 'Discovered in catalog.',
+              curatorEssay: `Featured recording archive edition with ${t.title}.`,
               tracks: [t],
             });
           }
         });
 
-        // Group tracks into dummy artists for categories
-        const artists: Artist[] = [];
-        const seenArtists = new Set<string>();
+        // Group artists from online results and local catalog
+        const artists: Artist[] = [...onlineArtists];
+        const seenArtists = new Set<string>(onlineArtists.map((a) => a.name.toLowerCase().trim()));
+        for (const ma of MOCK_ARTISTS) {
+          if (ma.name.toLowerCase().includes(qLower) || (ma.genre && ma.genre.toLowerCase().includes(qLower))) {
+            if (!seenArtists.has(ma.name.toLowerCase().trim())) {
+              seenArtists.add(ma.name.toLowerCase().trim());
+              artists.unshift(ma);
+            }
+          }
+        }
+
+        // Fill remaining artist spots from discovered tracks
         tracks.forEach((t) => {
-          if (t.artist && t.artistId && !seenArtists.has(t.artistId)) {
-            seenArtists.add(t.artistId);
+          const artistName = t.artist;
+          const artistKey = artistName.toLowerCase().trim();
+          if (!seenArtists.has(artistKey) && artists.length < 3) {
+            seenArtists.add(artistKey);
             artists.push({
-              id: t.artistId,
-              name: t.artist,
-              bio: 'Independent composer.',
+              id: t.artistId || `artist-${encodeURIComponent(artistKey.replace(/[^a-z0-9]/g, '-'))}`,
+              name: artistName,
+              bio: `Independent composer and producer.`,
               artworkUrl: t.coverUrl,
               genre: t.genre,
             });
@@ -147,13 +178,13 @@ export const SearchPage: React.FC = () => {
         });
 
         setResults({
-          tracks: tracks.slice(0, 10),
+          tracks: tracks.slice(0, 15),
           albums: albums.slice(0, 4),
           artists: artists.slice(0, 3),
         });
 
-        // Save to recent searches if search returned tracks
-        if (tracks.length > 0) {
+        // Save to recent searches if search returned results
+        if (tracks.length > 0 || albums.length > 0) {
           saveRecentSearch(debouncedQuery);
         }
       } catch (err) {

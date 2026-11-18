@@ -451,41 +451,103 @@ export const ExpandedPlayerModal: React.FC = () => {
                       Fetching lyrics from global archives...
                     </div>
                   ) : !lyrics || (!lyrics.plainLyrics && lyrics.syncedLines.length === 0) ? (
-                    <div className="py-16 text-center text-aura-500">
+                    <div className="py-16 text-center text-aura-500 space-y-3">
                       <Mic2 className="w-8 h-8 mx-auto mb-2 opacity-40" />
                       <p className="text-sm">No lyrics found for this dispatch.</p>
-                      <p className="text-xs text-aura-600 mt-1">
+                      <p className="text-xs text-aura-600">
                         This may be an instrumental piece, ambient study, or unindexed release.
                       </p>
+                      {lyrics && (
+                        <div className="flex items-center justify-center gap-3 pt-2">
+                          <a
+                            href={lyrics.lyricsManiaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-mono text-aura-accent hover:underline px-3 py-1.5 rounded-lg bg-aura-850 border border-aura-800"
+                          >
+                            Search LyricsMania ↗
+                          </a>
+                          <a
+                            href={lyrics.parolesUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-mono text-aura-amber hover:underline px-3 py-1.5 rounded-lg bg-aura-850 border border-aura-800"
+                          >
+                            Search Paroles.net ↗
+                          </a>
+                        </div>
+                      )}
                     </div>
                   ) : lyrics.hasSync ? (
-                    <div className="space-y-3 py-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
-                      {lyrics.syncedLines.map((line, idx) => {
-                        const isCurrent =
-                          currentTime >= line.time &&
-                          (idx === lyrics.syncedLines.length - 1 ||
-                            currentTime < lyrics.syncedLines[idx + 1].time);
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => seek(line.time)}
-                            className={`w-full text-left transition-all duration-200 py-2 px-3 rounded-xl font-sans cursor-pointer ${
-                              isCurrent
-                                ? 'text-aura-accent font-semibold text-lg bg-aura-850 border border-aura-800/80 shadow-xs'
-                                : 'text-aura-400 hover:text-aura-200 hover:bg-aura-850/30 text-sm'
-                            }`}
-                          >
-                            <span className="text-[10px] font-mono text-aura-500 mr-2 opacity-60">
-                              {formatTime(line.time)}
-                            </span>
-                            {line.text}
-                          </button>
-                        );
-                      })}
+                    <div className="space-y-4">
+                      <div className="space-y-3 py-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
+                        {lyrics.syncedLines.map((line, idx) => {
+                          const isCurrent =
+                            currentTime >= line.time &&
+                            (idx === lyrics.syncedLines.length - 1 ||
+                              currentTime < lyrics.syncedLines[idx + 1].time);
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => seek(line.time)}
+                              className={`w-full text-left transition-all duration-200 py-2 px-3 rounded-xl font-sans cursor-pointer ${
+                                isCurrent
+                                  ? 'text-aura-accent font-semibold text-lg bg-aura-850 border border-aura-800/80 shadow-xs'
+                                  : 'text-aura-400 hover:text-aura-200 hover:bg-aura-850/30 text-sm'
+                              }`}
+                            >
+                              <span className="text-[10px] font-mono text-aura-500 mr-2 opacity-60">
+                                {formatTime(line.time)}
+                              </span>
+                              {line.text}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="flex items-center justify-end gap-3 pt-3 border-t border-aura-800/60">
+                        <a
+                          href={lyrics.lyricsManiaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] font-mono text-aura-500 hover:text-aura-accent transition-colors"
+                        >
+                          LyricsMania ↗
+                        </a>
+                        <span className="text-aura-700 text-xs">•</span>
+                        <a
+                          href={lyrics.parolesUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] font-mono text-aura-500 hover:text-aura-amber transition-colors"
+                        >
+                          Paroles.net ↗
+                        </a>
+                      </div>
                     </div>
                   ) : (
-                    <div className="whitespace-pre-line text-sm sm:text-base text-aura-300 font-sans leading-relaxed py-4 max-h-[50vh] overflow-y-auto">
-                      {lyrics.plainLyrics}
+                    <div className="space-y-4">
+                      <div className="whitespace-pre-line text-sm sm:text-base text-aura-300 font-sans leading-relaxed py-4 max-h-[50vh] overflow-y-auto">
+                        {lyrics.plainLyrics}
+                      </div>
+                      <div className="flex items-center justify-end gap-3 pt-3 border-t border-aura-800/60">
+                        <a
+                          href={lyrics.lyricsManiaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] font-mono text-aura-500 hover:text-aura-accent transition-colors"
+                        >
+                          LyricsMania ↗
+                        </a>
+                        <span className="text-aura-700 text-xs">•</span>
+                        <a
+                          href={lyrics.parolesUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] font-mono text-aura-500 hover:text-aura-amber transition-colors"
+                        >
+                          Paroles.net ↗
+                        </a>
+                      </div>
                     </div>
                   )}
                 </div>
