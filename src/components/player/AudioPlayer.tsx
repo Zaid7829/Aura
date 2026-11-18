@@ -74,9 +74,16 @@ export const AudioPlayer: React.FC = () => {
                 {currentTrack.title}
               </h4>
             </button>
-            <p className="text-xs text-aura-400 truncate mt-0.5 font-sans">
-              {currentTrack.artist}
-            </p>
+            <div className="flex items-center gap-1.5 truncate mt-0.5">
+              <p className="text-xs text-aura-400 truncate font-sans">
+                {currentTrack.artist}
+              </p>
+              {currentTrack.youtubeId && (
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-red-950/80 text-red-400 border border-red-800/40 shrink-0">
+                  YouTube
+                </span>
+              )}
+            </div>
           </div>
 
           <TactileButton

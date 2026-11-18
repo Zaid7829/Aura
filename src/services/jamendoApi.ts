@@ -1,6 +1,7 @@
 import type { Track, Genre, Mood } from '../types/music';
 import { CURATED_TRACKS } from './mockCatalog';
 import { searchAppleMusicTracks } from './itunesApi';
+import { searchYouTubeTracks } from './youtubeSearch';
 
 // Public free Jamendo Client ID for legal music access
 const JAMENDO_CLIENT_ID = 'e7beea4a';
@@ -30,6 +31,16 @@ interface JamendoTrackResponse {
 export async function searchJamendoTracks(query: string, limit = 15): Promise<Track[]> {
   if (!query || query.trim() === '') {
     return CURATED_TRACKS;
+  }
+
+  // Priority 1: Full-Length YouTube Tracks
+  try {
+    const ytTracks = await searchYouTubeTracks(query, limit);
+    if (ytTracks.length > 0) {
+      return ytTracks;
+    }
+  } catch (err) {
+    console.warn('YouTube search fallback in jamendoApi:', err);
   }
 
   try {

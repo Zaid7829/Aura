@@ -70,3 +70,4 @@ export async function fetchSearchSuggestions(query: string, limit = 6): Promise<
     document.head.appendChild(script);
   });
 }
+

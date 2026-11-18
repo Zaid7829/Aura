@@ -43,6 +43,7 @@ export interface Track {
   playsCount?: number;
   isFavorite?: boolean;
   isLive?: boolean;
+  youtubeId?: string;
 }
 
 export interface Album {

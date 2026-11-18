@@ -1,6 +1,7 @@
 import type { Track, Artist, Album, Genre, Mood } from '../types/music';
 import { CURATED_TRACKS, CURATED_ALBUMS, MOCK_ARTISTS } from '../data/mockTracks';
 import { searchAppleMusicTracks } from './itunesApi';
+import { searchYouTubeTracks } from './youtubeSearch';
 
 const CLIENT_ID = import.meta.env.VITE_JAMENDO_CLIENT_ID || 'e7beea4a';
 const BASE_URL = 'https://api.jamendo.com/v3.0';
@@ -93,6 +94,16 @@ function normalizeTrack(item: any, index: number): Track {
 export async function searchTracks(query: string): Promise<Track[]> {
   if (!query || query.trim() === '') {
     return CURATED_TRACKS;
+  }
+
+  // First priority: Full-Length YouTube Tracks
+  try {
+    const ytResults = await searchYouTubeTracks(query, 18);
+    if (ytResults && ytResults.length > 0) {
+      return ytResults;
+    }
+  } catch (err) {
+    console.warn('YouTube search fallback:', err);
   }
 
   try {

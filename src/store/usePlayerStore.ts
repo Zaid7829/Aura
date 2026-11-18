@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Track, RepeatMode } from '../types/music';
 import { CURATED_TRACKS } from '../services/mockCatalog';
 import { audioService } from '../services/audioService';
+import { youtubePlayerService } from '../services/youtubePlayer';
 import { useLibraryStore } from './useLibraryStore';
 
 
@@ -111,6 +112,44 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
   // Initialize Volume
   audioService.setVolume(SAVED_VOLUME);
 
+  // Wire up YouTube Player callbacks
+  youtubePlayerService.setCallbacks({
+    onStateChange: ({ currentTime, duration, isPlaying, isLoading }) => {
+      const { currentTrack } = get();
+      if (currentTrack?.youtubeId) {
+        let freqData = get().frequencyData;
+        if (isPlaying) {
+          const t = Date.now() / 150;
+          freqData = Array.from({ length: 32 }, (_, i) =>
+            Math.floor(60 + 50 * Math.sin(t + i * 0.4) + 30 * Math.cos(t * 0.7 + i * 0.2))
+          );
+        } else {
+          freqData = new Array(32).fill(0);
+        }
+        set({
+          currentTime,
+          duration: duration || currentTrack.duration,
+          isPlaying,
+          isLoading,
+          buffered: duration || currentTrack.duration,
+          frequencyData: freqData,
+        });
+      }
+    },
+    onEnded: () => {
+      const { repeat, currentTrack, next } = get();
+      if (currentTrack?.youtubeId) {
+        if (repeat === 'one') {
+          youtubePlayerService.seek(0);
+          youtubePlayerService.play();
+        } else {
+          next();
+        }
+      }
+    },
+  });
+  youtubePlayerService.setVolume(SAVED_VOLUME);
+
   const saveQueueToStorage = (q: Track[]) => {
     localStorage.setItem('aura_queue', JSON.stringify(q));
   };
@@ -163,30 +202,55 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
 
       saveQueueToStorage(updatedQueue);
       useLibraryStore.getState().addToRecentlyPlayed(track);
-      audioService.loadAndPlay(track.audioUrl, 0);
+
+      if (track.youtubeId) {
+        audioService.pause();
+        youtubePlayerService.loadAndPlay(track.youtubeId, 0);
+      } else {
+        youtubePlayerService.pause();
+        audioService.loadAndPlay(track.audioUrl, 0);
+      }
     },
 
     togglePlay: () => {
       const { isPlaying, currentTrack } = get();
       if (!currentTrack) return;
 
-      if (isPlaying) {
+      if (currentTrack.youtubeId) {
+        if (isPlaying) {
+          youtubePlayerService.pause();
+        } else {
+          youtubePlayerService.play();
+        }
+      } else {
+        if (isPlaying) {
+          audioService.pause();
+        } else {
+          audioService.play();
+        }
+      }
+    },
+
+    pause: () => {
+      const { currentTrack } = get();
+      if (currentTrack?.youtubeId) {
+        youtubePlayerService.pause();
+      } else {
         audioService.pause();
+      }
+    },
+
+    resume: () => {
+      const { currentTrack } = get();
+      if (currentTrack?.youtubeId) {
+        youtubePlayerService.play();
       } else {
         audioService.play();
       }
     },
 
-    pause: () => {
-      audioService.pause();
-    },
-
-    resume: () => {
-      audioService.play();
-    },
-
     next: () => {
-      const { queue, currentIndex, repeat, shuffle, playTrack } = get();
+      const { queue, currentIndex, repeat, shuffle, playTrack, currentTrack } = get();
       if (queue.length === 0) return;
 
       let nextIndex = currentIndex + 1;
@@ -197,7 +261,11 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
         if (repeat === 'all') {
           nextIndex = 0;
         } else {
-          audioService.pause();
+          if (currentTrack?.youtubeId) {
+            youtubePlayerService.pause();
+          } else {
+            audioService.pause();
+          }
           return;
         }
       }
@@ -209,9 +277,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
     },
 
     previous: () => {
-      const { queue, currentIndex, currentTime, playTrack } = get();
+      const { queue, currentIndex, currentTime, playTrack, currentTrack } = get();
       if (currentTime > 3) {
-        audioService.seek(0);
+        if (currentTrack?.youtubeId) {
+          youtubePlayerService.seek(0);
+        } else {
+          audioService.seek(0);
+        }
         return;
       }
 
@@ -223,13 +295,19 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
     },
 
     seek: (seconds: number) => {
-      audioService.seek(seconds);
+      const { currentTrack } = get();
+      if (currentTrack?.youtubeId) {
+        youtubePlayerService.seek(seconds);
+      } else {
+        audioService.seek(seconds);
+      }
       set({ currentTime: seconds });
     },
 
     setVolume: (vol: number) => {
       const clamped = Math.max(0, Math.min(1, vol));
       audioService.setVolume(clamped);
+      youtubePlayerService.setVolume(clamped);
       localStorage.setItem('aura_volume', clamped.toString());
       set({ volume: clamped, isMuted: clamped === 0 });
     },
@@ -239,9 +317,11 @@ export const usePlayerStore = create<PlayerStore>((set, get) => {
       if (isMuted) {
         const restored = prevVolume > 0 ? prevVolume : 0.75;
         audioService.setVolume(restored);
+        youtubePlayerService.setVolume(restored);
         set({ isMuted: false, volume: restored });
       } else {
         audioService.setVolume(0);
+        youtubePlayerService.setVolume(0);
         set({ isMuted: true, prevVolume: volume, volume: 0 });
       }
     },
