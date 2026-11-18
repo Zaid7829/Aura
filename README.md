@@ -2,19 +2,20 @@
 
 <div align="center">
 
-### Sonic Sanctuary, Tactile Master Deck & Independent Audio Discovery
+### Sonic Sanctuary, Tactile Master Deck & High-Fidelity Audio Discovery
 
-*A contemplative music discovery platform and tactile audio journal curating ambient, neo-classical, electronic, and lo-fi soundscapes under Creative Commons.*
+*An editorial music discovery platform and tactile audio journal curating ambient, neo-classical, electronic, and lo-fi soundscapes with zero 30-second snippets, full-length streaming, SponsorBlock auto-skipping, and Chosic acoustic recommendations.*
 
+[![Version 1.1.0](https://img.shields.io/badge/Version-1.1.0-e07a5f?style=for-the-badge)](https://github.com/Zaid7829/Aura/releases)
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-4.3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Zustand](https://img.shields.io/badge/State-Zustand_5-443e38?style=for-the-badge)](https://github.com/pmndrs/zustand)
 [![License: MIT](https://img.shields.io/badge/License-MIT-e07a5f?style=for-the-badge)](./LICENSE)
-[![Build Status](https://img.shields.io/badge/Build-Passing-22c55e?style=for-the-badge)](https://github.com/Void8478/Aura/actions)
+[![Build Status](https://img.shields.io/badge/Build-Passing-22c55e?style=for-the-badge)](https://github.com/Zaid7829/Aura/actions)
 
-**[🌐 GitHub Repository](https://github.com/Void8478/Aura) · [📖 Documentation](#-table-of-contents) · [🐛 Issues](https://github.com/Void8478/Aura/issues) · [✨ Feature Requests](https://github.com/Void8478/Aura/issues)**
+**[🌐 GitHub Repository](https://github.com/Zaid7829/Aura) · [📖 Documentation](#-table-of-contents) · [🐛 Issues](https://github.com/Zaid7829/Aura/issues) · [✨ Feature Requests](https://github.com/Zaid7829/Aura/issues)**
 
 </div>
 
@@ -31,12 +32,19 @@
 - [🌿 Overview](#-overview)
   - [The Problem](#the-problem)
   - [The AURA Solution](#the-aura-solution)
-  - [Target Audience](#target-audience)
+  - [What's New in v1.1.0](#whats-new-in-v110)
 - [✨ Core Features](#-core-features)
-- [🎛️ Tactile Master Deck & Visualizer](#️-tactile-master-deck--visualizer)
+  - [1. Full-Length Audio Engine & YouTube Playback](#1--full-length-audio-engine--youtube-playback)
+  - [2. SponsorBlock Auto-Skip Integration](#2--sponsorblock-auto-skip-integration)
+  - [3. Chosic-Powered Acoustic Recommendations](#3--chosic-powered-acoustic-recommendations)
+  - [4. Multi-CDN High-Resolution Artwork](#4--multi-cdn-high-resolution-artwork)
+  - [5. Time-Synchronized Lyrics & Web Discovery](#5--time-synchronized-lyrics--web-discovery)
+  - [6. Real-Time FFT Spectral Visualizer](#6--real-time-fft-spectral-visualizer)
+  - [7. Tactile Master Deck & Expanded Overlay](#7--tactile-master-deck--expanded-overlay)
+  - [8. Mobile Responsiveness & Locked Viewport](#8--mobile-responsiveness--locked-viewport)
 - [🏗️ System Architecture](#️-system-architecture)
-  - [Audio & Data Pipeline](#audio--data-pipeline)
-  - [Route Splitting & Performance](#route-splitting--performance)
+  - [Audio & Ingestion Pipeline](#audio--ingestion-pipeline)
+  - [Serverless & Static Hosting Strategy](#serverless--static-hosting-strategy)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [📁 Project Structure](#-project-structure)
 - [🚀 Quick Start](#-quick-start)
@@ -44,20 +52,13 @@
   - [Installation Steps](#installation-steps)
 - [⚙️ Environment Configuration](#️-environment-configuration)
 - [⌨️ Keyboard Navigation](#️-keyboard-navigation)
-- [🔌 Jamendo API Integration](#-jamendo-api-integration)
-  - [Query Endpoints](#query-endpoints)
-  - [Resilient Caching & Offline Fallback](#resilient-caching--offline-fallback)
 - [🎨 Design System & Editorial Aesthetics](#-design-system--editorial-aesthetics)
-  - [Color Palette Tokens](#color-palette-tokens)
-  - [Typography Hierarchy](#typography-hierarchy)
 - [🚢 Build & Deployment](#-build--deployment)
   - [Production Compilation](#production-compilation)
-  - [Static Analysis & Linting](#static-analysis--linting)
-  - [Vercel Deployment](#vercel-deployment)
+  - [Vercel Deployment (Serverless API)](#vercel-deployment-serverless-api)
+  - [Static Web Hosting (Netlify, GitHub Pages, Cloudflare)](#static-web-hosting-netlify-github-pages-cloudflare)
   - [Docker Containerization](#docker-containerization)
 - [🔐 Security & Privacy Architecture](#-security--privacy-architecture)
-- [🐛 Troubleshooting](#-troubleshooting)
-- [❓ Frequently Asked Questions](#-frequently-asked-questions)
 - [🤝 Contributing](#-contributing)
 - [📄 License & Credits](#-license--credits)
 
@@ -65,95 +66,87 @@
 
 ## 🌿 Overview
 
-**AURA** is an editorial web-based audio player and contemplative music journal designed as an antidote to hyper-stimulating, algorithmic streaming platforms. Engineered for deep focus workers, ambient music aficionados, and acoustic purists, AURA marries physical music journalism aesthetics with the tactile feedback of reel-to-reel tape decks and analog synthesizers.
-
-Streaming directly from the open **Jamendo Music Catalog** under Creative Commons licensing, AURA serves legal, independent music accompanied by rich curator notes, acoustic telemetry (BPM, musical keys, waveforms), and a sovereign listening journal that stays on your device.
+**AURA** is an editorial web audio sanctuary and contemplative music journal designed as an antidote to hyper-stimulating, algorithmic streaming platforms. Engineered for deep focus workers, ambient music aficionados, and acoustic purists, AURA marries physical music journalism aesthetics with the tactile feedback of reel-to-reel tape decks and analog synthesizers.
 
 ### The Problem
-Commercial streaming applications are engineered around algorithmic retention loops, endless autoplay queues, sponsored track insertions, and data harvesting. Audio playback is divorced from context, and technical acoustic metadata (key signatures, tempo, audio fidelity) is stripped away behind opaque user interfaces.
+Commercial streaming applications are engineered around algorithmic retention loops, 30-second truncated audio previews, sponsored track insertions, and continuous behavioral tracking. Audio playback is divorced from context, and technical acoustic metadata (key signatures, tempo, audio fidelity) is stripped away behind opaque user interfaces.
 
 ### The AURA Solution
 
-| Traditional Streaming Services | The AURA Experience |
+| Traditional Streaming Platforms | The AURA Experience |
 |---|---|
-| 📉 Algorithmic feeds engineered for hyper-retention | 📜 Thoughtfully curated quarterly editions & slow discovery |
-| 🪟 Cluttered, noisy user interfaces | 🧘 Warm dark backdrop (`#0e0e11`), editorial serif typography, tactile equipment panels |
-| 🌫️ Compressed audio with hidden technical data | 📊 Real-time 64-bin FFT spectral visualizer, BPM, and musical key telemetry |
-| ☁️ Proprietary lock-in & continuous behavioral tracking | 🔒 Offline-first, client-side persistence via `localStorage` with zero data harvesting |
-| 🔇 Flat cards and generic corporate carousels | 🎚️ Physical tactile controls, analog VU-meter emulations, and command-palette navigation |
+| 📉 Truncated 30-second clips & commercial gating | 🎧 **Full-Length Uninterrupted Audio** with zero preview cutoffs |
+| 📢 Intros, promos, sponsored pitches & silence | ⚡ **SponsorBlock API** auto-skipping filler, sponsor pitches & silence |
+| 🤖 Black-box behavioral engagement algorithms | 🎼 **Chosic Acoustic Engine** based on BPM, Key, Genre & Mood space |
+| 🌫️ Low-res, compressed cover art | 🖼️ **Multi-CDN Artwork** (Apple Music, Spotify, YouTube HD) |
+| 🪟 Cluttered, noisy user interfaces | 🧘 Warm obsidian backdrop (`#0e0e11`), editorial serif typography, tactile panels |
+| ☁️ Behavioral tracking & telemetry | 🔒 Offline-first, client-side persistence with zero tracking |
 
-### Target Audience
-- **Knowledge Workers & Programmers**: Requiring unobtrusive, loop-friendly focus soundscapes without lyrical clutter.
-- **Ambient & Neo-Classical Enthusiasts**: Listeners who appreciate acoustic space, modular synthesis, and slow discovery.
-- **Audiophiles & Hardware Lovers**: Users who miss tactile physical equipment, reel-to-reel decks, and real-time frequency analysis.
-- **Independent Music Supporters**: Those who want to discover Creative Commons creators without corporate paywalls.
+### What's New in v1.1.0
+- 🚀 **Zero 30-Second Clips:** Exclusively streams full-length tracks with native audio controls.
+- ⚡ **SponsorBlock Automated Clean Playback:** Crowd-sourced skip detection automatically bypasses video intros, sponsor pitches, filler, and silence.
+- 🎯 **Chosic Acoustic Recommendation Engine:** Song recommendations computed across acoustic similarity, genre affinity, tempo (BPM) proximity, and key compatibility.
+- 🖼️ **Multi-CDN Art Architecture:** Native resolution upscaling across Apple Music CDN (`https://is1-ssl.mzstatic.com`), Spotify CDN (`https://i.scdn.co`, `https://charts-images.scdn.co`), and YouTube HQ thumbnails.
+- 📝 **Synchronized Lyrics & External Hubs:** Live line-by-line highlight tracking with quick links to [LyricsMania](https://www.lyricsmania.com) and [Paroles.net](https://www.paroles.net).
+- 📱 **Mobile UI & Viewport Lock:** 1:1 mobile scaling (prevents accidental zoom in/out), unified tactile mini-player, gesture dismissals, and zero-overflow guarantee across all screen sizes.
+- ⚡ **Universal Production Search:** Instant <150ms search with dual-tier fallback supporting static hosting (GitHub Pages, Netlify) and Vercel serverless functions (`api/yt-search.ts`).
 
 ---
 
 ## ✨ Core Features
 
-### 1. 🎛️ Real-Time FFT Spectral Visualizer & Audio Engine
-- **Singleton Audio Architecture**: Centralized `AudioService` prevents duplicate nodes, memory leaks, and overlapping playback across route changes.
-- **Dynamic 64-Bin Fast Fourier Transform (FFT)**: Hardware-accelerated Canvas spectrum analyzer calculating frequency bins straight from the live audio stream buffer.
-- **4 Visualizer Render Modes**:
+### 1. 🎧 Full-Length Audio Engine & YouTube Playback
+- **Zero Truncation Guarantee:** Complete elimination of 30-second snippets. Every playback dispatch streams the full, authentic recording.
+- **Background YouTube Player Service:** Headless YouTube IFrame API audio bridge integrated with custom reactive controls (play/pause, scrubbing, volume memory, repeat, shuffle).
+- **Instant Genre Audio Fallbacks:** Deterministic fallback mapping guarantees that even in offline or static environments, playback never stalls or errors.
+
+### 2. ⚡ SponsorBlock Auto-Skip Integration
+- **Real-Time Non-Music Detection:** Connects to `https://sponsor.ajay.app` to fetch crowd-sourced timestamps for:
+  - `sponsor` (sponsor segments / commercial pitches)
+  - `intro` / `outro` (opening titles, animations, credits)
+  - `music_offtopic` (dialogue, skits, non-musical filler)
+  - `preview` / `filler` (teaser clips, silence)
+- **Seamless Millisecond Seeking:** As the playback cursor hits a detected boundary, AURA instantly skips ahead to the exact start of the music.
+
+### 3. 🎼 Chosic-Powered Acoustic Recommendations
+- **Acoustic Similarity Modeling:** Generates similar tracks based on Chosic's acoustic recommendation framework:
+  - **Genre Affinity Matching:** Direct and adjacent genre compatibility matrices (+45 pts / +25 pts).
+  - **Mood Space Alignment:** 8 targeted mood spaces: *Late Night*, *Deep Focus*, *Hypnotic*, *Melancholic*, *Ethereal*, *Warm & Analog*, *Meditative*, and *Urban Drift*.
+  - **Tempo Proximity:** Proximity analysis targeting tracks within ±5–15 BPM.
+  - **Harmonic Compatibility:** Key signature matching and relative major/minor alignment.
+  - **Sonic Tag Overlap:** Matching physical production tags (e.g., *Tape Decay*, *Buchla Modular*, *Felt Piano*, *Dusty Keys*).
+
+### 4. 🖼️ Multi-CDN High-Resolution Artwork
+- **Apple Music / iTunes CDN:** Dynamic resolution switching from 100×100 thumbnails to **600×600 studio master artwork** (`https://is1-ssl.mzstatic.com`).
+- **Spotify CDN:** Direct support for `https://i.scdn.co` and `https://charts-images.scdn.co`.
+- **YouTube HQ Thumbnails:** Resolves high-fidelity max-res (`maxresdefault.jpg`) and high-res (`hqdefault.jpg`) thumbnails.
+
+### 5. 📝 Time-Synchronized Lyrics & Web Discovery
+- **LRCLIB Integration:** Real-time, millisecond-accurate synchronized lyrics with automatic autoscroll and interactive line clicking to seek.
+- **One-Click Web Portals:** Direct access buttons to search and verify lyrics on **LyricsMania** (`www.lyricsmania.com`) and **Paroles.net** (`www.paroles.net`).
+
+### 6. 🎛️ Real-Time FFT Spectral Visualizer
+- **Dynamic 64-Bin Fast Fourier Transform (FFT):** Real-time hardware-accelerated Canvas spectrum visualizer running at 60 FPS.
+- **4 Visualizer Render Modes:**
   - `bars`: Dynamic 16-band gradient spectrum bars.
   - `wave`: Smooth analog oscilloscope waveform trace.
-  - `led-vu`: 10-segment segmented vintage LED VU-meter with amber/olive peak indicators.
+  - `led-vu`: 10-segment vintage LED VU-meter with amber/olive peak indicators.
   - `minimal-dots`: Zen pulsing ambient focus indicators.
 
-### 2. 📖 Tactile Master Deck & Expanded Overlay
-- **Framer Motion Spatial Transitions**: Seamless morphing between the docked bottom mini-player and the immersive full-screen Master Deck modal.
-- **Three-Panel Modular Inspection**:
-  - **Deck Panel**: Vinyl spinning disk animation, scrub bar, volume slider, shuffle, repeat, and visualizer mode selector.
-  - **Liner Notes**: Editorial curator critique, story quote, and an interactive **Personal Listening Journal** allowing listeners to record thoughts, timestamps, and locations.
-  - **Acoustic Telemetry**: Complete acoustic data readout including BPM, key signature, frequency tags, release date, audio format (MP3 320kbps), and CC licensing parameters.
+### 7. 📖 Tactile Master Deck & Expanded Overlay
+- **Spatial Transitions:** Smooth morphing between the docked bottom mini-player and the immersive Master Deck modal.
+- **Multi-Tab Workspace:**
+  - **Deck Panel:** Spinning vinyl disc, interactive scrub bar, tactile attenuator slider, and visualizer mode selector.
+  - **Lyrics Tab:** Synchronized line-by-line highlight tracking with deep links to LyricsMania & Paroles.net.
+  - **Similar Tracks Tab:** Chosic acoustic recommendations with one-click queue insertion.
+  - **Liner Notes:** Editorial curator critique, story quote, and personal listening journal.
+  - **Telemetry:** BPM readout, key signature, frequency tags, release date, and license info.
 
-### 3. 📦 Crate Management & Sovereign Library
-- **Listening Crates (Playlists)**: Full local CRUD capability—create thematic crates, add custom color tags, edit descriptions, append tracks, and re-order queues.
-- **Rolling Playback Timeline**: Automated 50-track listening archive with duplicate de-duplication (bumping replayed tracks to the top).
-- **Multi-Tier Favorites**: Bookmark individual tracks, full albums, or composer profiles with instant reactive UI updates.
-
-### 4. 🌐 Jamendo Creative Commons Discovery & Offline Fallback
-- **Live Open API Integration**: Real-time querying against the Jamendo v3.0 REST API for tracks, featured picks, albums, and artist discographies.
-- **In-Memory Cache (TTL)**: 5-minute request caching layer that prevents redundant network roundtrips and avoids API rate exhaustion.
-- **Resilient Fallback Catalog**: Pre-bundled high-fidelity offline fallback database guaranteeing seamless playback even when disconnected or when the API key is unavailable.
-
-### 5. 🧭 Curated Mood Spaces & Sonic Taxonomy
-- **8 Acoustic Mood Spaces**: *Late Night*, *Deep Focus*, *Hypnotic*, *Melancholic*, *Ethereal*, *Warm & Analog*, *Meditative*, and *Urban Drift*.
-- **10 Editorial Genres**: *Ambient*, *Lo-Fi*, *Neo-Classical*, *Electronic*, *Jazz Fusion*, *Downtempo*, *Minimalism*, *Post-Rock*, *Modular*, and *Indie*.
-
-### 6. ⚡ Power-User Command Palette & Shortcuts
-- **Global Command Bar**: Instant overlay search triggered via `⌘K` or `/` across tracks, artists, albums, and moods.
-- **Complete Tactile Keyboard Controls**: Full keyboard bindings for play/pause, skips, seeks, mute, favorites, visualizer toggles, and queue drawers.
-
----
-
-## 🎛️ Tactile Master Deck & Visualizer
-
-AURA's centerpiece is the **Expanded Master Deck Modal**, rendering tactile hardware equipment right inside the browser:
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│  [×] CLOSE             AURA MASTER DECK // TACTILE 01                  │
-├────────────────────────────────────────────────────────────────────────┤
-│                                                                        │
-│   ┌───────────────────────┐   [ Deck ]  [ Liner Notes ]  [ Telemetry ] │
-│   │                       │                                            │
-│   │    [ ARTWORK VINYL ]  │   Title:       Reel-to-Reel Tape Study     │
-│   │     (Spinning Disc)   │   Artist:      Elena Rostova               │
-│   │                       │   BPM / Key:   74 BPM • D Minor            │
-│   └───────────────────────┘   Mood:        Deep Focus                  │
-│                                                                        │
-│   ◄◄   [ ▶ PLAY / ⏸ PAUSE ]   ►►   🔀 SHUFFLE   🔁 REPEAT (OFF/ALL/1) │
-│                                                                        │
-│   02:14 ━━━━━━●────────────────────────────────────────────── 05:42    │
-│                                                                        │
-│   [ ▂▃▅▆▇▆▅▃▂  LIVE 64-BIN FFT FREQUENCY SPECTRUM ANALYZER  ]          │
-│   Modes: [ Bars ]  [ Oscilloscope ]  [ LED-VU ]  [ Minimal Dots ]      │
-│                                                                        │
-│   🔊 ━━━━━━━━●────────── 85%             ❤️ [ Add to Personal Crate ]  │
-└────────────────────────────────────────────────────────────────────────┘
-```
+### 8. 📱 Mobile Responsiveness & Locked Viewport
+- **1:1 Resolution Locking:** Viewport scale locked to prevent accidental pinch-zooming and layout distortion on mobile screens.
+- **Universal Mobile Compatibility:** Fully responsive from **320px to 4K displays** with zero horizontal overflow (`scrollWidth === innerWidth`).
+- **Tactile Touch Targets:** All mobile action buttons sized to meet the **≥44×44px** touch ergonomics standard.
+- **Safe-Area Aware:** Full support for `env(safe-area-inset-bottom)` ensuring perfect clearance above home bars on modern devices.
 
 ---
 
@@ -163,62 +156,44 @@ AURA is engineered as a deterministic, offline-first Single Page Application (SP
 
 ```mermaid
 flowchart TB
-    subgraph CatalogSources["🎧 Audio & Metadata Ingestion"]
-        API["Jamendo v3.0 REST API"]
-        Cache[("In-Memory 5-Min Cache")]
-        MockCatalog[("Offline Fallback Catalog")]
+    subgraph AudioEngine["🎧 Full-Length Audio Engine"]
+        YTPlayer["YouTube Player Service (IFrame API)"]
+        SponsorBlock["SponsorBlock Service (Auto-Skip Engine)"]
+        AudioService["AudioService Singleton (Web Audio FFT)"]
     end
 
-    subgraph ServiceLayer["⚙️ Core Services & Transport"]
-        JamendoClient["jamendo.ts / jamendoApi.ts"]
-        AudioService["AudioService Singleton\n(HTML5 Audio + Web Audio API)"]
+    subgraph DataServices["🌐 Catalog, Search & Recommendations"]
+        SearchSvc["Unified Music Search (Apple Music + Jamendo)"]
+        ChosicEngine["Chosic Recommendations Engine (Acoustic Distance)"]
+        LyricsSvc["Lyrics Service (LRCLIB + LyricsMania + Paroles)"]
+        ServerlessAPI["/api/yt-search (Vercel Serverless / Vite Proxy)"]
     end
 
     subgraph StateManagement["🧠 Centralized State (Zustand)"]
-        PlayerStore["usePlayerStore\n(Queue, Position, Playback, Visualizer)"]
-        LibraryStore["useLibraryStore\n(Crates, History, Favorites, Notes)"]
-        ToastStore["useToastStore\n(Tactile Notifications)"]
+        PlayerStore["usePlayerStore (Queue, Playback, Telemetry)"]
+        LibraryStore["useLibraryStore (Crates, History, Favorites, Notes)"]
     end
 
-    subgraph AudioPipeline["🔊 Hardware Audio & Visualizer Pipeline"]
-        AudioElement["<audio> Media Element"]
-        AudioContext["AudioContext Node"]
-        AnalyserNode["AnalyserNode (FFT Size: 64)"]
-        CanvasUI["VisualizerCanvas\n(bars / wave / led-vu / dots)"]
+    subgraph UIComponents["🖥️ Presentation & Tactile Surfaces"]
+        MasterDeck["ExpandedPlayerModal (Deck, Lyrics, Similar, Notes)"]
+        DockPlayer["AudioPlayer (Docked Bottom Mini-Player)"]
+        SearchPage["SearchPage & SearchPalette (⌘K)"]
+        Visualizer["VisualizerCanvas (64-bin Spectrum)"]
     end
 
-    subgraph Views["🖥️ Editorial Presentation Layer"]
-        Layout["RootLayout + Responsive Navigation"]
-        MasterDeck["ExpandedPlayerModal (3-Tab Deck)"]
-        Pages["Pages (Home, Discover, Search, Library, Album, Artist)"]
-        Palette["SearchPalette (⌘K / /)"]
-    end
-
-    subgraph Storage["💾 Persistent Local Storage"]
-        LocalStorage[("Browser LocalStorage\n(aura_library_v2, aura_queue, aura_volume)")]
-    end
-
-    API -->|Fetch JSON| Cache
-    Cache -->|Cache Miss| JamendoClient
-    MockCatalog -->|Fallback On Error| JamendoClient
-    JamendoClient --> PlayerStore
-
-    PlayerStore -->|Play / Pause / Seek| AudioService
-    AudioService --> AudioElement
-    AudioElement --> AudioContext
-    AudioContext --> AnalyserNode
-    AnalyserNode -->|ByteFrequencyData| PlayerStore
-    PlayerStore -->|Normalized Frequency Array| CanvasUI
-
-    PlayerStore --> Views
-    LibraryStore --> Views
-    ToastStore --> Views
-    LibraryStore <--> LocalStorage
-    PlayerStore <--> LocalStorage
+    ServerlessAPI --> SearchSvc
+    SearchSvc --> PlayerStore
+    ChosicEngine --> MasterDeck
+    LyricsSvc --> MasterDeck
+    PlayerStore --> AudioEngine
+    AudioEngine --> Visualizer
+    PlayerStore --> DockPlayer
+    PlayerStore --> MasterDeck
 ```
 
-### Route Splitting & Performance
-Every dynamic route (`/discover`, `/search`, `/library`, `/favorites`, `/recent`, `/album/:id`, `/artist/:id`, `/playlist/:id`, `/about`) is lazily loaded via `React.lazy()` and encapsulated within `<React.Suspense>`. This strategy keeps the initial entry chunk to under **140 kB gzip**, guaranteeing near-instantaneous First Contentful Paint (FCP).
+### Serverless & Static Hosting Strategy
+1. **Vercel Deployments:** `api/yt-search.ts` provides a native Node.js serverless function to search and parse YouTube audio endpoints without CORS barriers.
+2. **Static Web Hosts (Netlify, GitHub Pages, Cloudflare):** When deployed on pure static CDN hosts where serverless functions do not run, AURA automatically uses its **instant CORS search tier** powered by the open Apple Music / iTunes API and Jamendo open catalog, guaranteeing sub-second response times worldwide.
 
 ---
 
@@ -233,10 +208,12 @@ Every dynamic route (`/discover`, `/search`, `/library`, `/favorites`, `/recent`
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) | `^13.1.1` | Tactile spring physics, modal morphing, and gesture interactions |
 | **State Management** | [Zustand](https://github.com/pmndrs/zustand) | `^5.0.15` | Minimalist boilerplate-free flux state with deep `localStorage` sync |
 | **Routing** | [React Router](https://reactrouter.com/) | `^7.18.3` | URL-driven route orchestration and dynamic parameter parsing |
-| **Audio Engine** | [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | Native | Real-time byte frequency analysis via browser `AudioContext` & `AnalyserNode` |
-| **Iconography** | [Lucide React](https://lucide.dev/) | `^1.37.0` | Crisp, tree-shakable SVG icons |
+| **Audio Engine** | [YouTube IFrame API](https://developers.google.com/youtube/iframe_api_reference) | Native | Background full-length audio streaming with native player controls |
+| **Visualizer** | [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | Native | Real-time byte frequency analysis via browser `AudioContext` & `AnalyserNode` |
+| **Skip Engine** | [SponsorBlock API](https://sponsor.ajay.app/) | REST | Crowd-sourced skip segments to bypass intros, sponsors, and silence |
+| **Similarity Engine** | **Chosic Model** | Algorithmic | Acoustic feature distance scoring (Genre, Mood, BPM, Key, Tags) |
+| **Lyrics** | [LRCLIB](https://lrclib.net/) | REST | Time-synchronized lyrics with LyricsMania & Paroles.net integration |
 | **Linter** | [Oxlint](https://oxc.rs/) | `^1.79.0` | Ultra-high performance Rust-based JavaScript and TypeScript linter |
-| **Audio Source** | [Jamendo API](https://developer.jamendo.com/v3.0) | `v3.0` | Legal, independent audio catalog under Creative Commons licenses |
 
 ---
 
@@ -244,123 +221,69 @@ Every dynamic route (`/discover`, `/search`, `/library`, `/favorites`, `/recent`
 
 ```text
 AURA/
-├── .env.example                 # Environment variables template
-├── .gitignore                   # Git exclusion rules
-├── .oxlintrc.json               # Oxlint static analysis rules
-├── CODE_OF_CONDUCT.md           # Community guidelines and standards
-├── CONTRIBUTING.md              # Contributor workflow and PR guidelines
-├── Dockerfile                   # Multi-stage production container build
-├── .dockerignore                # Container build exclusions
-├── index.html                   # HTML entry point, Google Fonts, and meta headers
-├── LICENSE                      # MIT Open-Source License
-├── package.json                 # Project dependencies, scripts, and engine metadata
-├── README.md                    # Project documentation
-├── SECURITY.md                  # Vulnerability disclosure and privacy policy
-├── tsconfig.json                # TypeScript root configuration
-├── tsconfig.app.json            # Client application compilation rules
-├── tsconfig.node.json           # Build tooling TypeScript configuration
-├── vercel.json                  # SPA routing rewrite rule for Vercel
-├── vite.config.ts               # Vite bundler plugins and Tailwind v4 integration
-│
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md        # Structured bug report template
-│   │   └── feature_request.md   # Tactile enhancement request template
-│   ├── PULL_REQUEST_TEMPLATE.md # PR verification checklist
-│   └── workflows/
-│       └── ci.yml               # GitHub Actions Lint and Build workflow
-│
+├── api/
+│   └── yt-search.ts             # Vercel Serverless Function for YouTube search
 ├── public/
 │   ├── favicon.svg              # Vector brand favicon
 │   └── icons.svg                # Shared SVG icon sprites
+├── src/
+│   ├── components/
+│   │   ├── brand/               # Vector SVG logo and geometric wordmarks
+│   │   ├── common/              # TrackRow, CuratorNote, ErrorState, EmptyState
+│   │   ├── layout/              # Header, Footer, and responsive scaffolding
+│   │   ├── music/               # AlbumCard, ArtistCard, SectionHeader
+│   │   ├── player/              # ExpandedPlayerModal, AudioPlayer, VisualizerCanvas
+│   │   ├── search/              # SearchInput, SearchPalette (⌘K)
+│   │   └── ui/                  # TactileButton, ArtworkImage, Badge, Skeleton
+│   │
+│   ├── data/
+│   │   ├── mockData.ts          # Seed catalog collections
+│   │   └── mockTracks.ts        # Seed library with verified YouTube IDs
+│   │
+│   ├── hooks/
+│   │   └── useKeyboardShortcuts.ts # Global keyboard navigation listener
+│   │
+│   ├── layouts/
+│   │   └── RootLayout.tsx       # Application shell with docked audio player
+│   │
+│   ├── pages/
+│   │   ├── HomePage.tsx         # Curated sound editions and hero release
+│   │   ├── DiscoverPage.tsx     # Deep filtering by mood, genre, and curation
+│   │   ├── SearchPage.tsx       # Search interface (Tracks, Albums, Artists)
+│   │   ├── RadioStation.tsx     # Generative mood stream player
+│   │   ├── LibraryPage.tsx      # Personal crates and listening journal
+│   │   ├── FavoritesPage.tsx    # Liked tracks, albums, and artists
+│   │   ├── RecentPage.tsx       # Chronological listening history
+│   │   ├── AlbumDetailPage.tsx  # Album tracklist and release essays
+│   │   ├── ArtistDetailPage.tsx # Composer profile and top works
+│   │   └── AboutPage.tsx        # Manifesto, editorial philosophy, and team
+│   │
+│   ├── services/
+│   │   ├── audioService.ts      # Web Audio API singleton for FFT analysis
+│   │   ├── itunesApi.ts         # High-speed Apple Music / iTunes search & CDN resolver
+│   │   ├── jamendo.ts           # Unified cached catalog service
+│   │   ├── lyricsService.ts     # Synchronized lyrics service & web link resolver
+│   │   ├── recommendationsService.ts # Chosic acoustic similarity recommendation engine
+│   │   ├── sponsorBlock.ts      # SponsorBlock auto-skip segment detector
+│   │   ├── youtubePlayer.ts     # Headless YouTube IFrame audio player service
+│   │   └── youtubeSearch.ts     # Multi-tiered search & full-audio resolver
+│   │
+│   ├── store/
+│   │   ├── usePlayerStore.ts    # Unified playback, queue, and volume store
+│   │   ├── useLibraryStore.ts   # Crates, favorites, history, and notes store
+│   │   └── useToastStore.ts     # Tactile toast notifications
+│   │
+│   ├── types/
+│   │   └── music.ts             # Domain interfaces (Track, Album, Artist, Genre, Mood)
+│   │
+│   └── utils/
+│       ├── artwork.ts           # Apple, Spotify, and YouTube multi-CDN resolver
+│       └── formatters.ts        # Time, BPM, and date formatting helpers
 │
-└── src/
-    ├── App.css                  # Component-level animations and keyframe rules
-    ├── App.tsx                  # Lazy route declarations and RootLayout router
-    ├── index.css                # Tailwind v4 theme tokens, fonts, and dark palette
-    ├── main.tsx                 # React 19 root bootstrap
-    │
-    ├── assets/                  # Static brand assets and imagery
-    │   └── hero.png             # Editorial interface banner
-    │
-    ├── components/
-    │   ├── brand/
-    │   │   └── Logo.tsx         # Vector SVG "A" ribbon logo and geometric wordmark
-    │   ├── common/
-    │   │   ├── CuratorNote.tsx  # Editorial pull-quote and curator stamp
-    │   │   ├── EditorialCard.tsx# Featured story presentation card
-    │   │   ├── EmptyState.tsx   # Visual empty states for lists and crates
-    │   │   ├── ErrorState.tsx   # Error recovery banner with retry trigger
-    │   │   ├── KeyboardShortcutsModal.tsx # Keyboard cheatsheet overlay
-    │   │   └── TrackRow.tsx     # Tactile track listing with playback trigger
-    │   ├── layout/
-    │   │   ├── Header.tsx       # Top navigation, search trigger, and breadcrumbs
-    │   │   ├── Footer.tsx       # Editorial publication footer
-    │   │   └── Layout.tsx       # Content scaffolding wrapper
-    │   ├── music/
-    │   │   ├── AlbumCard.tsx    # Vinyl gatefold-style album card
-    │   │   ├── ArtistCard.tsx   # Rounded composer spotlight card
-    │   │   ├── PlaylistCard.tsx # Crate overview card with color tags
-    │   │   └── SectionHeader.tsx# Editorial eyebrow + serif heading component
-    │   ├── player/
-    │   │   ├── AudioPlayer.tsx  # Docked bottom mini-player with scrubber
-    │   │   ├── ExpandedPlayerModal.tsx # Fullscreen 3-tab tactile master deck
-    │   │   ├── QueueDrawer.tsx  # Slide-out listening queue manager
-    │   │   ├── TrackProgress.tsx# Interactive audio time scrub bar
-    │   │   ├── VisualizerCanvas.tsx # 64-bin FFT canvas spectrum visualizer
-    │   │   └── VolumeSlider.tsx # Tactile volume attenuator slider
-    │   ├── search/
-    │   │   ├── SearchInput.tsx  # Input component with debounce support
-    │   │   └── SearchPalette.tsx# ⌘K Command palette with live filtering
-    │   └── ui/
-    │       ├── ArtworkImage.tsx # Image loader with graceful fallback skeleton
-    │       ├── Badge.tsx        # Tag and genre pill badge
-    │       ├── Button.tsx       # Core accessible button primitive
-    │       ├── Input.tsx        # Accessible form input
-    │       ├── Modal.tsx        # Framer Motion accessible dialog
-    │       ├── Skeleton.tsx     # Shimmer skeleton loading placeholders
-    │       ├── TactileButton.tsx# Hardware-button click physics component
-    │       └── Toast.tsx        # Transient library status notifications
-    │
-    ├── data/
-    │   ├── mockData.ts          # Curated albums, playlists, and stations
-    │   └── mockTracks.ts        # Seed library with pre-rendered waveforms
-    │
-    ├── hooks/
-    │   └── useKeyboardShortcuts.ts # Global window key listener and dispatcher
-    │
-    ├── layouts/
-    │   └── RootLayout.tsx       # Application shell with sticky audio dock
-    │
-    ├── pages/
-    │   ├── AboutPage.tsx        # Manifesto, editorial philosophy, and team
-    │   ├── AlbumDetailPage.tsx  # Tracklist, release notes, and album essays
-    │   ├── ArtistDetailPage.tsx # Composer profile, biography, and top works
-    │   ├── DesignTestPage.tsx   # Component isolation sandbox
-    │   ├── DiscoverPage.tsx     # Deep filtering by mood, genre, and curation
-    │   ├── FavoritesPage.tsx    # Liked tracks, bookmarked albums, and artists
-    │   ├── HomePage.tsx         # Curated sound editions and hero release
-    │   ├── LibraryPage.tsx      # Personal crates and track commentary journal
-    │   ├── PlaylistDetailPage.tsx # Individual crate track management
-    │   ├── RecentPage.tsx       # Chronological 50-track listening log
-    │   └── SearchPage.tsx       # Dedicated catalog search interface
-    │
-    ├── services/
-    │   ├── audioService.ts      # Singleton managing AudioContext, Analyser & HTML5 Audio
-    │   ├── jamendo.ts           # High-level cached Jamendo catalog service
-    │   ├── jamendoApi.ts        # Direct Jamendo v3.0 REST API caller
-    │   └── mockCatalog.ts       # Resilient offline catalog database
-    │
-    ├── store/
-    │   ├── useLibraryStore.ts   # Crates CRUD, favorites, notes & history store
-    │   ├── usePlayerStore.ts    # Audio state, playback queue & telemetry store
-    │   └── useToastStore.ts     # Ephemeral notifications store
-    │
-    ├── types/
-    │   └── music.ts             # Domain interfaces (Track, Album, Artist, Crate, etc.)
-    │
-    └── utils/
-        └── formatters.ts        # Seconds to MM:SS, BPM, and date utilities
+├── vercel.json                  # SPA routing rewrite rule for Vercel
+├── vite.config.ts               # Vite configuration and local dev proxy middleware
+├── package.json                 # Project dependencies and npm scripts
+└── README.md                    # Project documentation
 ```
 
 ---
@@ -368,15 +291,15 @@ AURA/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js**: `v18.0.0` or later (tested on Node `v20.x` & `v22.x`)
+- **Node.js**: `v18.0.0` or later (tested on Node `v20.x`, `v22.x`, and `v24.x`)
 - **Package Manager**: `npm` (v9+), `pnpm`, or `yarn`
-- **Modern Web Browser**: Chrome, Edge, Firefox, or Safari with Web Audio API support
+- **Modern Web Browser**: Chrome, Edge, Firefox, or Safari
 
 ### Installation Steps
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Void8478/Aura.git
+   git clone https://github.com/Zaid7829/Aura.git
    cd Aura
    ```
 
@@ -385,40 +308,31 @@ AURA/
    npm install
    ```
 
-3. **Configure environment variables**:
-   ```bash
-   cp .env.example .env
-   ```
-   *(A public Jamendo Client ID is already pre-configured in `.env.example`, allowing instant streaming without registration).*
-
-4. **Launch the development server**:
+3. **Launch the development server**:
    ```bash
    npm run dev
    ```
 
-5. **Open the local application**:
-   Open **`http://localhost:5173/`** in your browser.
+4. **Open in browser**:
+   Navigate to **`http://localhost:5173/`**.
 
 ---
 
 ## ⚙️ Environment Configuration
 
-All environment variables in AURA are prefixed with `VITE_` to allow client-side bundling:
+All environment variables in AURA are optional and come with zero-config defaults:
 
 | Variable | Required | Default Value | Description |
 |---|:---:|---|---|
-| `VITE_JAMENDO_CLIENT_ID` | ❌ *(Optional)* | `e7beea4a` | Jamendo API Client ID for querying music streams. Uses pre-configured public key if omitted. |
-| `VITE_APP_TITLE` | ❌ *(Optional)* | `AURA` | Application title rendered in header banners and browser tab titles. |
-| `VITE_APP_ENV` | ❌ *(Optional)* | `development` | Deployment environment identifier (`development`, `staging`, `production`). |
-
-> [!TIP]
-> If you wish to register personal Jamendo API credentials, create a free account at the [Jamendo Developer Portal](https://developer.jamendo.com/) and replace the `VITE_JAMENDO_CLIENT_ID` value in your `.env` file.
+| `VITE_JAMENDO_CLIENT_ID` | ❌ *(Optional)* | `e7beea4a` | Public Jamendo API Client ID for Creative Commons archives. |
+| `VITE_APP_TITLE` | ❌ *(Optional)* | `AURA` | Application title rendered in header banners and page titles. |
+| `VITE_APP_ENV` | ❌ *(Optional)* | `development` | Environment mode (`development`, `production`). |
 
 ---
 
 ## ⌨️ Keyboard Navigation
 
-AURA features extensive hardware-style keyboard shortcuts, enabling full navigation and playback control without touching a mouse:
+AURA includes extensive hardware-style keyboard shortcuts:
 
 | Key Binding | Action | Description |
 |---|---|---|
@@ -437,27 +351,6 @@ AURA features extensive hardware-style keyboard shortcuts, enabling full navigat
 
 ---
 
-## 🔌 Jamendo API Integration
-
-AURA interfaces with the official **Jamendo v3.0 REST API** via two specialized service modules (`jamendoApi.ts` and `jamendo.ts`).
-
-### Query Endpoints
-
-| Method | Jamendo Endpoint | Description | Cache Policy |
-|---|---|---|---|
-| `searchTracks(query)` | `/tracks/?namesearch={query}` | Searches catalog by song, artist, album, or genre | 5-Minute In-Memory |
-| `getFeaturedTracks()` | `/tracks/?featured=true` | Retrieves editorially spotlighted independent tracks | 5-Minute In-Memory |
-| `getPopularTracks()` | `/tracks/?order=popularity_month` | Fetches monthly trending ambient & lo-fi tracks | 5-Minute In-Memory |
-| `getTracksByGenre(genre)` | `/tracks/?tags={genre}` | Retrieves songs filtered by specific acoustic tags | 5-Minute In-Memory |
-| `getArtist(artistId)` | `/artists/?id={artistId}` | Returns artist biography, member details, and artwork | 5-Minute In-Memory |
-| `getAlbum(albumId)` | `/albums/?id={albumId}` | Retrieves album tracklist, release year, and cover art | 5-Minute In-Memory |
-
-### Resilient Caching & Offline Fallback
-- **TTL Cache**: Responses are cached in-memory with a 5-minute Time-To-Live (TTL) using request URL keys, preventing redundant network overhead.
-- **Graceful Fallback**: If network calls fail, exceed a 4000ms timeout threshold, or encounter rate limits, AURA intercepts the failure and transparently provides matching items from `src/services/mockCatalog.ts`.
-
----
-
 ## 🎨 Design System & Editorial Aesthetics
 
 The visual language of AURA reflects a physical high-fidelity acoustic journal:
@@ -472,9 +365,9 @@ Configured via Tailwind CSS v4 `@theme`:
 - **Typography Scale**: `#f4f2f8` (Headings) → `#9491a1` (Muted telemetry metadata)
 
 ### Typography Hierarchy
-- **Editorial Headlines**: [*Fraunces*](https://fonts.google.com/specimen/Fraunces)—Variable optical size editorial serif with delicate italic flourishes.
-- **Interface & Body**: [*Plus Jakarta Sans*](https://fonts.google.com/specimen/Plus+Jakarta+Sans)—Geometric, highly legible grotesque sans-serif.
-- **Technical Telemetry**: [*JetBrains Mono*](https://fonts.google.com/specimen/JetBrains+Mono)—Engineered monospace typeface for BPM counters, timecodes, and key signatures.
+- **Editorial Headlines**: [*Fraunces*](https://fonts.google.com/specimen/Fraunces) — Variable optical size editorial serif.
+- **Interface & Body**: [*Plus Jakarta Sans*](https://fonts.google.com/specimen/Plus+Jakarta+Sans) — Geometric grotesque sans-serif.
+- **Technical Telemetry**: [*JetBrains Mono*](https://fonts.google.com/specimen/JetBrains+Mono) — Engineered monospace typeface for BPM counters, timecodes, and key signatures.
 
 ---
 
@@ -485,7 +378,7 @@ To compile the TypeScript code and generate an optimized production bundle:
 ```bash
 npm run build
 ```
-This triggers TypeScript verification (`tsc -b`) followed by Vite's production build. Output is compiled into `/dist`.
+This runs TypeScript checking (`tsc -b`) followed by Vite's production build. Output is compiled into `/dist`.
 
 To preview the production bundle locally:
 ```bash
@@ -498,31 +391,16 @@ AURA uses **Oxlint** for ultra-fast static analysis:
 npm run lint
 ```
 
-### Vercel Deployment
-AURA includes a pre-configured `vercel.json` for client-side SPA routing:
-
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
-}
-```
-
+### Vercel Deployment (Serverless API)
+AURA includes native Vercel serverless integration in `api/yt-search.ts` alongside client-side SPA routing in `vercel.json`:
 1. Push your repository to GitHub.
-2. Import the project into [Vercel](https://vercel.com/new).
-3. Confirm Vite defaults:
-   - **Framework Preset**: `Vite`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-4. Click **Deploy**.
+2. Import into [Vercel](https://vercel.com/new).
+3. Vercel automatically deploys both the frontend and the `/api/yt-search` serverless route.
+
+### Static Web Hosting (Netlify, GitHub Pages, Cloudflare)
+AURA is 100% functional on pure static hosts without any server setup! Its multi-tiered search architecture uses Apple Music and Jamendo APIs directly with global CORS support.
 
 ### Docker Containerization
-To deploy AURA in a container using Nginx:
-
 ```dockerfile
 # Build Stage
 FROM node:20-alpine AS builder
@@ -551,59 +429,22 @@ Build and run:
 docker build -t aura-music .
 docker run -d -p 8080:80 --name aura aura-music
 ```
-Visit `http://localhost:8080/` in your browser.
 
 ---
 
 ## 🔐 Security & Privacy Architecture
 
-- **Zero Analytics & Tracking**: AURA contains zero telemetry beacons, third-party analytics trackers, or user fingerprinting scripts.
+- **Zero Analytics & Tracking**: Contains zero telemetry beacons, third-party analytics trackers, or user fingerprinting scripts.
 - **Local Data Sovereignty**: All crates, favorites, listening history, and personal journal entries remain isolated inside browser `localStorage`.
-- **CORS Audio Handling**: Remote audio streams are loaded with `crossOrigin = "anonymous"`. If a remote host enforces strict CORS policies preventing Web Audio buffer inspection, AURA degrades gracefully without throwing fatal audio playback exceptions.
-- **Environment Isolation**: No sensitive private keys or database passwords exist in the client repository. Only public client IDs prefixed with `VITE_` are exposed.
-
----
-
-## 🐛 Troubleshooting
-
-### ❌ Problem: Audio playback does not start on page load
-> **Cause**: Modern browsers enforce autoplay policies that restrict unmuted audio from playing before a user performs an interaction with the document.
->
-> **✅ Solution**: Click any track row, tap the play button in the dock, or press <kbd>Space</kbd> to initialize the Web Audio `AudioContext`.
-
-### ❌ Problem: Visualizer displays flat lines during audio playback
-> **Cause**: Remote stream CORS headers can occasionally restrict the Web Audio `MediaElementSourceNode` from extracting raw byte frequency data.
->
-> **✅ Solution**: AURA automatically sets `crossOrigin = "anonymous"`. If a third-party server restricts frequency reads, AURA provides an animated fallback motion curve to maintain UI continuity.
-
-### ❌ Problem: 404 Not Found error when refreshing pages on Vercel
-> **Cause**: Deep client-side routes like `/album/:id` or `/discover` require the web server to rewrite all requests back to `/index.html`.
->
-> **✅ Solution**: Ensure `vercel.json` exists in the project root with the rewrite configuration described in [Vercel Deployment](#vercel-deployment).
-
----
-
-## ❓ Frequently Asked Questions
-
-### Is an account required to use AURA?
-No. AURA is completely free, un-gated, and anonymous. No signups, email entries, or passwords are ever requested.
-
-### Where are my listening crates and journal entries stored?
-All crate metadata, liked songs, history, and personal listening notes are stored on your device in browser `localStorage` (`aura_library_v2`).
-
-### Are the songs legal to stream?
-Yes. All tracks in AURA are streamed legally via Jamendo's public API under Creative Commons licenses (CC-BY, CC-BY-SA, CC-NC) that permit free non-commercial streaming.
-
-### Does the audio visualizer impact CPU performance?
-No. The visualizer runs on an optimized `requestAnimationFrame` loop that calculates between 32 and 64 frequency bins and suspends execution when playback is paused.
+- **CORS Audio Handling**: Remote audio streams are loaded with `crossOrigin = "anonymous"`.
+- **No Sensitive Secrets**: No private keys or database credentials exist in the client repository.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Whether you are refining tactile CSS micro-animations, expanding acoustic filters, or optimizing Web Audio performance:
-
-1. **Fork the Repository**: Click **Fork** at [Void8478/Aura](https://github.com/Void8478/Aura).
+Contributions are welcome!
+1. **Fork the Repository**: [Zaid7829/Aura](https://github.com/Zaid7829/Aura).
 2. **Create a Feature Branch**:
    ```bash
    git checkout -b feat/analog-tape-delay
@@ -630,8 +471,12 @@ Contributions are welcome! Whether you are refining tactile CSS micro-animations
 This project is licensed under the [MIT License](./LICENSE).
 
 ### Acknowledgments & Attributions
-- **Music Catalog**: Streamed via [Jamendo](https://www.jamendo.com/) Creative Commons Licensing.
-- **Typography**: [Fraunces](https://fonts.google.com/specimen/Fraunces) by Phaedra Charles & Flavia Zimbardi; [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) by Tokotype; [JetBrains Mono](https://www.jetbrains.com/lp/mono/) by JetBrains.
+- **Full Audio Streaming**: Powered by the YouTube IFrame API.
+- **Auto-Skip Technology**: Powered by the [SponsorBlock API](https://sponsor.ajay.app/).
+- **Music Catalog**: Streamed via [Apple Music / iTunes API](https://developer.apple.com/) and [Jamendo](https://www.jamendo.com/) Creative Commons Licensing.
+- **Recommendation Metrics**: Modeled after [Chosic](https://www.chosic.com/) acoustic similarity models.
+- **Lyrics Services**: [LRCLIB](https://lrclib.net/), [LyricsMania](https://www.lyricsmania.com/), and [Paroles.net](https://www.paroles.net/).
+- **Typography**: [Fraunces](https://fonts.google.com/specimen/Fraunces), [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), and [JetBrains Mono](https://www.jetbrains.com/lp/mono/).
 - **Iconography**: [Lucide Icons](https://lucide.dev/).
 - **Photography**: Creative Commons imagery courtesy of [Unsplash](https://unsplash.com/).
 
